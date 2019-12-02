@@ -18,7 +18,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         inscription = findViewById(R.id.btnRegister);
         inscription.setOnClickListener(this);
-        connexion = findViewById(R.id.btnConnect);
+
+        connexion = findViewById(R.id.btnValidateConnexion);
         connexion.setOnClickListener(this);
     }
 
@@ -27,10 +28,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == inscription){
             Intent register = new Intent(this, Inscription.class);
             startActivity(register);
-        }
-        if (view == inscription){
-            Intent accueil = new Intent(this, AccueilActivity.class);
-            startActivity(accueil);
+        } else if (view == connexion) {
+            Intent home = new Intent(this, HomeActivity.class);
+            startActivity(home);
         }
     }
 }

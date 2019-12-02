@@ -61,10 +61,10 @@
         app:layout_constraintTop_toBottomOf="@+id/etEmail" />
 
     <Button
-        android:id="@+id/btnConnect"
+        android:id="@+id/btnValidateConnexion"
         android:layout_width="308dp"
         android:layout_height="60dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/rounded_blue"
         android:elevation="2dp"
         android:fontFamily="Open Sans"
@@ -80,7 +80,7 @@
         android:id="@+id/btnRegister"
         android:layout_width="308dp"
         android:layout_height="60dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="68dp"
         android:background="@drawable/rounded_white_border"
         android:elevation="2dp"
         android:fontFamily="Open Sans"
@@ -90,19 +90,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnConnect" />
+        app:layout_constraintTop_toBottomOf="@+id/btnValidateConnexion" />
 
     <TextView
         android:id="@+id/tvOubli"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="8dp"
         android:text="Mot de passe oublié ?"
         android:textColor="@color/blue"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.781"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnConnect" />
+        app:layout_constraintTop_toBottomOf="@+id/btnValidateConnexion" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

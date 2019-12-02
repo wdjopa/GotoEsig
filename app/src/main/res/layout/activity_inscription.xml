@@ -19,14 +19,14 @@
         app:srcCompat="@drawable/logo" />
 
     <Button
-        android:id="@+id/btnConnect"
+        android:id="@+id/btnValidateInscription"
         android:layout_width="308dp"
         android:layout_height="60dp"
         android:layout_marginTop="44dp"
         android:background="@drawable/rounded_blue"
         android:elevation="2dp"
         android:fontFamily="Open Sans"
-        android:text="CONNEXION"
+        android:text="INSCRIPTION"
         android:textColor="@color/white"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,20 +35,20 @@
         app:layout_constraintTop_toBottomOf="@+id/etConfirm" />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnConnect"
         android:layout_width="308dp"
         android:layout_height="60dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/rounded_white_border"
         android:elevation="2dp"
         android:fontFamily="Open Sans"
-        android:text="INSCRIPTION"
+        android:text="CONNEXION"
         android:textColor="@color/blue"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnConnect" />
+        app:layout_constraintTop_toBottomOf="@+id/btnValidateInscription" />
 
     <EditText
         android:id="@+id/etEmail"
