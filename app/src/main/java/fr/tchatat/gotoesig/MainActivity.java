@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view == inscription){
-            Intent register = new Intent(this, Inscription.class);
+            Intent register = new Intent(this, AjoutTrajet.class);
             startActivity(register);
         }
     }
