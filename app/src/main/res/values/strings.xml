@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">GotoEsig</string>
+    <string name="title_activity_drawer">Drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_profile">Profil</string>
+    <string name="menu_add_road">Ajouter un trajet</string>
+    <string name="menu_roads">Mes trajets</string>
+    <string name="menu_search_road">Chercher un trajet</string>
+    <string name="menu_evaluate">Evaluer un trajet</string>
+    <string name="menu_statistiques">Statistiques</string>
+    <string name="menu_quit">Quitter</string>
 </resources>

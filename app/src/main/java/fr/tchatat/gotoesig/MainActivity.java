@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button inscription;
+    private Button inscription, connexion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,13 +18,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         inscription = findViewById(R.id.btnRegister);
         inscription.setOnClickListener(this);
+
+        connexion = findViewById(R.id.btnValidateConnexion);
+        connexion.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         if (view == inscription){
-            Intent register = new Intent(this, AjoutTrajet.class);
+            Intent register = new Intent(this, Inscription.class);
             startActivity(register);
+        } else if (view == connexion) {
+            Intent home = new Intent(this, HomeActivity.class);
+            startActivity(home);
         }
     }
 }
