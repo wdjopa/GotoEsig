@@ -1,14 +1,14 @@
-package fr.tchatat.gotoesig.ui.send;
+package fr.tchatat.gotoesig.ui.statistiques;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class SendViewModel extends ViewModel {
+public class StatistiquesViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public SendViewModel() {
+    public StatistiquesViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is send fragment");
     }

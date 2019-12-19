@@ -8,14 +8,41 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="fr.tchatat.gotoesig.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:label="Accueil"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="fr.tchatat.gotoesig.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_profile"
+        android:name="fr.tchatat.gotoesig.ui.profile.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/nav_add_road"
+        android:name="fr.tchatat.gotoesig.ui.roads.NouveauTrajetFragment"
+        android:label="@string/menu_add_road"
+        tools:layout="@layout/fragment_add_road" />
+    <fragment
+        android:id="@+id/nav_my_roads"
+        android:name="fr.tchatat.gotoesig.ui.roads.MesTrajetsFragment"
+        android:label="@string/menu_roads"
+        tools:layout="@layout/fragment_mes_trajets" />
+    <fragment
+        android:id="@+id/nav_chercher_trajet"
+        android:name="fr.tchatat.gotoesig.ui.roads.RechercheTrajetFragment"
+        android:label="@string/menu_search_road"
+        tools:layout="@layout/fragment_chercher_trajet" />
+    <fragment
+        android:id="@+id/nav_evaluer"
+        android:name="fr.tchatat.gotoesig.ui.roads.EvaluerTrajetFragment"
+        android:label="@string/menu_evaluate"
+        tools:layout="@layout/fragment_evaluer" />
+    <fragment
+        android:id="@+id/nav_statistiques"
+        android:name="fr.tchatat.gotoesig.ui.statistiques.StatistiquesFragment"
+        android:label="@string/menu_statistiques"
+        tools:layout="@layout/fragment_statistiques" />
+<!--
 
     <fragment
         android:id="@+id/nav_slideshow"
@@ -34,10 +61,6 @@
         android:name="fr.tchatat.gotoesig.ui.share.ShareFragment"
         android:label="@string/menu_share"
         tools:layout="@layout/fragment_share" />
+-->
 
-    <fragment
-        android:id="@+id/nav_send"
-        android:name="fr.tchatat.gotoesig.ui.send.SendFragment"
-        android:label="@string/menu_send"
-        tools:layout="@layout/fragment_send" />
 </navigation>

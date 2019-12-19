@@ -1,14 +1,14 @@
-package fr.tchatat.gotoesig.ui.gallery;
+package fr.tchatat.gotoesig.ui.roads;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class GalleryViewModel extends ViewModel {
+public class MesTrajetsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public GalleryViewModel() {
+    public MesTrajetsViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is gallery fragment");
     }

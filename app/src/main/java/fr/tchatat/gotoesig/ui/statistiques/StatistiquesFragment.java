@@ -1,4 +1,4 @@
-package fr.tchatat.gotoesig.ui.slideshow;
+package fr.tchatat.gotoesig.ui.statistiques;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import fr.tchatat.gotoesig.R;
 
-public class SlideshowFragment extends Fragment {
+public class StatistiquesFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
+    private StatistiquesViewModel sendViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                ViewModelProviders.of(this).get(SlideshowViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_mes_trajets, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
-        slideshowViewModel.getText().observe(this, new Observer<String>() {
+        sendViewModel =
+                ViewModelProviders.of(this).get(StatistiquesViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_statistiques, container, false);
+        final TextView textView = root.findViewById(R.id.text_send);
+        sendViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

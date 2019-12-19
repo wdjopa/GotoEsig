@@ -45,8 +45,8 @@ public class HomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
+                R.id.nav_add_road, R.id.nav_my_roads, R.id.nav_chercher_trajet,
+                R.id.nav_profile, R.id.nav_evaluer, R.id.nav_statistiques,R.id.nav_home)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -56,12 +56,12 @@ public class HomeActivity extends AppCompatActivity {
         toolbar.setTitle("ACCUEIL");
     }
 
-   /* @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.drawer, menu);
         return true;
-    }*/
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
