@@ -22,9 +22,9 @@ public class EvaluerTrajetFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         nouveauTrajetViewModel =
                 ViewModelProviders.of(this).get(NouveauTrajetViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_add_road, container, false);
-        /*final TextView textView = root.findViewById(R.id.text_gallery);
-        nouveauTrajetViewModel.getText().observe(this, new Observer<String>() {
+        View root = inflater.inflate(R.layout.fragment_evaluer, container, false);
+        final TextView textView = root.findViewById(R.id.text_gallery);
+        /*nouveauTrajetViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
