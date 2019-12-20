@@ -9,6 +9,7 @@
     <color name="blue">#0D3FA0</color>
     <color name="gray">#B8B8B8</color>
     <color name="transparent">#00000000</color>
+    <color name="blue_text">#0D3FA0</color>
     <!-- card colors -->
     <color name="card_background">#ffffff</color>
     <color name="card_shadow_1">#d4d4d4</color>
