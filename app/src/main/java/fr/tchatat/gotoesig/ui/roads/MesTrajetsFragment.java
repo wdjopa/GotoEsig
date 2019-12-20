@@ -33,7 +33,6 @@ public class MesTrajetsFragment extends Fragment {
                 textView.setText(s);
             }
         });*/
-
         return root;
     }
 }

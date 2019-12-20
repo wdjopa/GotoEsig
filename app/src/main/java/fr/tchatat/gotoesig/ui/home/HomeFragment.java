@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -57,6 +59,20 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });*/
+
+        ajoutTrajet = root.findViewById(R.id.propTrajetBtn);
+        ajoutTrajet.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Fragment fragment = new NouveauTrajetFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
         return root;
     }
+
 }
