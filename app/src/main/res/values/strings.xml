@@ -15,4 +15,17 @@
     <string name="menu_evaluate">Evaluer un trajet</string>
     <string name="menu_statistiques">Statistiques</string>
     <string name="menu_quit">Quitter</string>
+
+    <string-array name="moyens_array">
+        <item>Voiture</item>
+        <item>Moto</item>
+        <item>Métro</item>
+        <item>Bus</item>
+        <item>Vélo</item>
+    </string-array>
+
+    <string-array name="autoroute_array">
+        <item>Oui</item>
+        <item>Non</item>
+    </string-array>
 </resources>

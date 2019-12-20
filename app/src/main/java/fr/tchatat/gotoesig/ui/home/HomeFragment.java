@@ -4,19 +4,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import fr.tchatat.gotoesig.R;
+import fr.tchatat.gotoesig.ui.roads.NouveauTrajetFragment;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
+    private CardView ajoutTrajet;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,6 +37,20 @@ public class HomeFragment extends Fragment {
                 textView.setText(s);
             }
         });*/
+
+        ajoutTrajet = root.findViewById(R.id.propTrajetBtn);
+        ajoutTrajet.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Fragment fragment = new NouveauTrajetFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
         return root;
     }
+
 }
