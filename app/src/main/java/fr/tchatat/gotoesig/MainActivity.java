@@ -75,16 +75,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             };
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
-            DatabaseReference usersRef = ref.child(uid);
+            DatabaseReference usersRef = ref.child(uid + "/account");
             usersRef.addValueEventListener(userListener);
 
         }
     }
 
     public void updateUI(User user) {
-        Intent accueil = new Intent(MainActivity.this, HomeActivity.class);
-        accueil.putExtra("user", user);
-        startActivity(accueil);
+        if (user == null) {
+            mAuth.signOut();
+
+        } else {
+
+            Intent accueil = new Intent(MainActivity.this, HomeActivity.class);
+            accueil.putExtra("user", user);
+            startActivity(accueil);
+        }
     }
     @Override
     public void onClick(View view) {

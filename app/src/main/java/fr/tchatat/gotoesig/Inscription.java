@@ -65,7 +65,7 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
                             String uid = FirebaseAuth.getInstance().getUid();
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
 
-                            DatabaseReference usersRef = ref.child(uid);
+                            DatabaseReference usersRef = ref.child(uid + "/account");
                             User user = new User(uid);
                             user.setEmail(email);
                             user.setPseudo(pseudo);
