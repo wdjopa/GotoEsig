@@ -26,7 +26,7 @@
             app:srcCompat="@drawable/logo" />
 
         <EditText
-            android:id="@+id/etEmail"
+            android:id="@+id/etEmailConnexion"
             android:layout_width="308dp"
             android:layout_height="60dp"
             android:layout_marginTop="52dp"
@@ -47,7 +47,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
         <EditText
-            android:id="@+id/etPass"
+            android:id="@+id/etPassConnexion"
             android:layout_width="308dp"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
@@ -65,7 +65,7 @@
             app:layout_constraintEnd_toEndOf="@+id/imageView"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+            app:layout_constraintTop_toBottomOf="@+id/etEmailConnexion" />
 
         <Button
             android:id="@+id/btnValidateConnexion"
@@ -81,7 +81,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPass" />
+            app:layout_constraintTop_toBottomOf="@+id/etPassConnexion" />
 
         <Button
             android:id="@+id/btnRegister"

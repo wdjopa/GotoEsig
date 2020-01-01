@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "992558012006",
+    "firebase_url": "https://gotoesig-50c46.firebaseio.com",
+    "project_id": "gotoesig-50c46",
+    "storage_bucket": "gotoesig-50c46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992558012006:android:1f345eaf5be7cdba7bffa7",
+        "android_client_info": {
+          "package_name": "fr.tchatat.gotoesig"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "992558012006-59g0aejgrbtvn2svs9a2qoo9ttt8rdv8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992558012006-59g0aejgrbtvn2svs9a2qoo9ttt8rdv8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

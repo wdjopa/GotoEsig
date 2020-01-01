@@ -1,5 +1,6 @@
 package fr.tchatat.gotoesig;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -24,9 +26,8 @@ import android.view.Menu;
 import android.widget.Button;
 
 public class HomeActivity extends AppCompatActivity {
-
+    private FirebaseAuth mAuth;
     private AppBarConfiguration mAppBarConfiguration;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,8 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Accueil");
+
+        mAuth = FirebaseAuth.getInstance();
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -49,7 +52,16 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
     }
+
+
+    private void signOut() {
+        mAuth.signOut();
+        Intent register = new Intent(this, MainActivity.class);
+        startActivity(register);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -27,8 +27,7 @@ import fr.tchatat.gotoesig.ui.roads.NouveauTrajetFragment;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private CardView mesTrajets;
-    private CardView ajoutTrajet;
+    private CardView mesTrajets, ajoutTrajet;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -39,12 +38,9 @@ public class HomeFragment extends Fragment {
         getActivity().setTitle("Accueil");
 
         mesTrajets = root.findViewById(R.id.mesTrajetsBtn);
-
         mesTrajets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().setTitle("Mes Trajets");
-
                 Fragment fragment = new MesTrajetsFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

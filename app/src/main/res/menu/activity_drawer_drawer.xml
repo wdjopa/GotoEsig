@@ -30,8 +30,8 @@
                 android:id="@+id/nav_statistiques"
                 android:title="@string/menu_statistiques" />
             <item
-                android:id="@+id/nav_send"
-                android:title="@string/menu_quit" />
+                android:id="@+id/nav_signout"
+                android:title="@string/menu_signout" />
         </menu>
     </item>
 
