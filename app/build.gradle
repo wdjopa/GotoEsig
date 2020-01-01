@@ -73,4 +73,6 @@ dependencies {
     // For Circular image view
     implementation 'com.mikhaellopez:circularimageview:4.1.1'
 
+    implementation 'com.mcxiaoke.volley:library:1.0.19'
+
 }

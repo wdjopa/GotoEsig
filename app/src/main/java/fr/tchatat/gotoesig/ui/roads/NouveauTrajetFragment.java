@@ -1,5 +1,6 @@
 package fr.tchatat.gotoesig.ui.roads;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -23,20 +24,45 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.Response;
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.tchatat.gotoesig.R;
+import fr.tchatat.gotoesig.models.Trajet;
+import fr.tchatat.gotoesig.models.User;
+import fr.tchatat.gotoesig.ui.home.HomeFragment;
 
 public class NouveauTrajetFragment extends Fragment {
 
@@ -53,12 +79,113 @@ public class NouveauTrajetFragment extends Fragment {
     private static List<String> moyens;
     private static ArrayAdapter<String> adapter1;
     private Button btnVal;
+    private RequestQueue requestQueue;
+    private String baseUrl = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
+    private String url;
+    private final String key = "AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY";
+    private static String dist = "";
+    private static String temps = "";
 
 
     public void setSpinner(){
         adapter1 = new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, moyens);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMoyen.setAdapter(adapter1);
+    }
+
+    private void popup(String key, final String adresse, final String auto, final float fcontrib, final String date, final String heure, final String moyenT, final int iret, final int iplaces) {
+        // First, we insert the username into the repo url.
+        // The repo url is defined in GitHubs API docs (https://developer.github.com/v3/repos/).
+        this.url = this.baseUrl + adresse + "&destinations=ESIGELEC,SER,France&key=" + key;
+
+        // Next, we create a new JsonArrayRequest. This will use Volley to make a HTTP request
+        // that expects a JSON Array Response.
+        // To fully understand this, I'd recommend readng the office docs: https://developer.android.com/training/volley/index.html
+        JsonObjectRequest arrReq = new JsonObjectRequest(Request.Method.GET, url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("data", response.toString());
+                        try{
+                            JSONArray rows = response.getJSONArray("rows");
+                            JSONObject elements0 = rows.getJSONObject(0);
+                            JSONArray elements = elements0.getJSONArray("elements");
+                            JSONObject element = elements.getJSONObject(0);
+                            JSONObject distance = element.getJSONObject("distance");
+                            JSONObject duration = element.getJSONObject("duration");
+
+                            dist = distance.getString("text");
+                            temps = duration.getString("text");
+
+                        }catch( JSONException je){
+                            Toast.makeText(getActivity(), "Une erreur s'est produite", Toast.LENGTH_SHORT).show();
+                            Log.d("JSONException", je.getMessage());
+                        }
+
+                        if((!dist.matches("")) && (!temps.matches(""))){
+                            new AlertDialog.Builder(getActivity())
+                                .setTitle("Confirmation")
+                                .setMessage("Le trajet fera "+ dist +" et durera "+ temps +". Voulez vous le sélectioner ?\nAttention, cette action ne pourra être annulée !")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String uid = FirebaseAuth.getInstance().getUid();
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets");
+
+                                        String id = String.valueOf(System.currentTimeMillis());
+
+                                        DatabaseReference usersRef = ref.child(id);
+                                        Trajet trajet = new Trajet();
+                                        trajet.setAdresse(adresse);
+                                        trajet.setAutoroute(auto);
+                                        trajet.setContribution(fcontrib);
+                                        trajet.setDate(date);
+                                        trajet.setDistance(dist);
+                                        trajet.setHeure(heure);
+                                        trajet.setId(id);
+                                        trajet.setUid(uid);
+                                        trajet.setMoyen(moyenT);
+                                        trajet.setNombre(iplaces);
+                                        trajet.setTemps(temps);
+                                        trajet.setRetard(iret);
+                                        Log.d("Trajet", new Gson().toJson(trajet));
+                                        Map<String, Trajet> trajets = new HashMap<>();
+                                        trajets.put(id, trajet);
+
+                                        usersRef.setValue(trajet);
+
+                                        Fragment fragment = new HomeFragment();
+                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+                                        fragmentTransaction.addToBackStack(null);
+                                        fragmentTransaction.commit();
+
+                                        Toast.makeText(getActivity(), "Trajet créé avec succès !", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+
+                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                .setNegativeButton(android.R.string.no, null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                        }
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getActivity(), "Error calculatiing the distance and time. Please check your Internet connection", Toast.LENGTH_SHORT).show();
+                        Log.e("Volley", error.toString());
+                    }
+                }
+        );
+        // Add the request we just defined to our request queue.
+        // The request queue will automatically handle the request as soon as it can.
+        requestQueue.add(arrReq);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -74,8 +201,16 @@ public class NouveauTrajetFragment extends Fragment {
             }
         });*/
 
+        requestQueue = Volley.newRequestQueue(getActivity());
+
         voiturelayout = root.findViewById(R.id.voitureLayout);
         voiturelayout.setVisibility(ConstraintLayout.GONE);
+        ptDepart = root.findViewById(R.id.etPoint);
+        dDepart = root.findViewById(R.id.etDate);
+        hDepart = root.findViewById(R.id.etTime);
+        retard = root.findViewById(R.id.etRetard);
+        contribution = root.findViewById(R.id.etContribution);
+        nbPlaces = root.findViewById(R.id.etNombre);
         btnVal = root.findViewById(R.id.ajoutTrajetBtn);
 
         FirebaseApp.initializeApp(this.getActivity());
@@ -123,37 +258,27 @@ public class NouveauTrajetFragment extends Fragment {
         btnVal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String moyenT = spinnerMoyen.getSelectedItem().toString();
-                String adresse = ptDepart.getText().toString();
-                String date = dDepart.getText().toString();
-                String heure = hDepart.getText().toString();
+
+                final String moyenT = spinnerMoyen.getSelectedItem().toString();
+                final String adresse = ptDepart.getText().toString();
+                final String date = dDepart.getText().toString();
+                final String heure = hDepart.getText().toString();
                 String ret = retard.getText().toString();
                 String places = nbPlaces.getText().toString();
                 String contrib = contribution.getText().toString();
+                final String auto = spinnerAutoroute.getSelectedItem().toString();
 
-                if(moyenT == "" || adresse == "" || date == "" || heure == "" || ret == "" || places == "" || places == "" || contrib == ""){
-                    Toast.makeText(getActivity(), "Tous les champs sont obligatoires", Toast.LENGTH_SHORT);
+                if(adresse.matches("") || date.matches("") || heure.matches("") || ret.matches("") || places.matches("") || places.matches("") || (moyenT.equals("Voiture") && contrib.matches(""))){
+                    Toast.makeText(getActivity(), "Tous les champs sont obligatoires", Toast.LENGTH_SHORT).show();
                 }else{
-                    int iplaces = Integer.parseInt(places);
-                    float fcontrib = Float.parseFloat(contrib);
+
+                    final int iplaces = Integer.parseInt(places);
+                    final int iret = Integer.parseInt(ret);
+                    final float fcontrib = (moyenT.equals("Voiture") ? Float.parseFloat(contrib) : 0);
 
                     Log.d("ok", "Clic");
-                    new AlertDialog.Builder(getActivity())
-                        .setTitle("Delete entry")
-                        .setMessage("Le trajet fera 7 km et durera 14 min. Voulez vous le sélectioner ?\nAttention, cette action ne pourra être annulée !")
 
-                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                        // The dialog is automatically dismissed when a dialog button is clicked.
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                    popup(key, adresse, auto, fcontrib, date, heure, moyenT, iret, iplaces);
                 }
 
             }
