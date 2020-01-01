@@ -82,7 +82,7 @@
             app:layout_constraintTop_toBottomOf="@+id/etPoint" />
 
         <EditText
-            android:id="@+id/etTime"
+            android:id="@+id/etDate"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
@@ -98,7 +98,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvDate" />
 
         <EditText
-            android:id="@+id/etDate"
+            android:id="@+id/etTime"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
@@ -111,7 +111,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etTime" />
+            app:layout_constraintTop_toBottomOf="@+id/etDate" />
 
         <TextView
             android:id="@+id/tvRetard"
@@ -124,7 +124,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etDate" />
+            app:layout_constraintTop_toBottomOf="@+id/etTime" />
 
         <EditText
             android:id="@+id/etRetard"

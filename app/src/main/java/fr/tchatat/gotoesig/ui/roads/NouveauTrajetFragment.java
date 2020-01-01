@@ -1,8 +1,10 @@
 package fr.tchatat.gotoesig.ui.roads;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -39,10 +43,17 @@ public class NouveauTrajetFragment extends Fragment {
     private NouveauTrajetViewModel nouveauTrajetViewModel;
     private Spinner spinnerMoyen;
     private Spinner spinnerAutoroute;
+    private EditText ptDepart;
+    private EditText dDepart;
+    private EditText hDepart;
+    private EditText retard;
+    private EditText contribution;
+    private EditText nbPlaces;
     private ConstraintLayout voiturelayout;
     private static List<String> moyens;
     private static ArrayAdapter<String> adapter1;
     private Button btnVal;
+
 
     public void setSpinner(){
         adapter1 = new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, moyens);
@@ -112,27 +123,42 @@ public class NouveauTrajetFragment extends Fragment {
         btnVal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                // Add the buttons
-                builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked OK button
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+                String moyenT = spinnerMoyen.getSelectedItem().toString();
+                String adresse = ptDepart.getText().toString();
+                String date = dDepart.getText().toString();
+                String heure = hDepart.getText().toString();
+                String ret = retard.getText().toString();
+                String places = nbPlaces.getText().toString();
+                String contrib = contribution.getText().toString();
 
-                builder.setMessage("Vous parcourerez 7 km et le trajet durera 17 min ! Voulez-vous choisir ce trajet ?\n Attention, cette action ne peut être annulée");
+                if(moyenT == "" || adresse == "" || date == "" || heure == "" || ret == "" || places == "" || places == "" || contrib == ""){
+                    Toast.makeText(getActivity(), "Tous les champs sont obligatoires", Toast.LENGTH_SHORT);
+                }else{
+                    int iplaces = Integer.parseInt(places);
+                    float fcontrib = Float.parseFloat(contrib);
 
-                // Create the AlertDialog
-                AlertDialog dialog = builder.create();
+                    Log.d("ok", "Clic");
+                    new AlertDialog.Builder(getActivity())
+                        .setTitle("Delete entry")
+                        .setMessage("Le trajet fera 7 km et durera 14 min. Voulez vous le sélectioner ?\nAttention, cette action ne pourra être annulée !")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+                }
+
             }
         });
 
         return root;
     }
-
 }
