@@ -21,12 +21,19 @@ import com.google.firebase.auth.FirebaseAuthActionCodeException;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import fr.tchatat.gotoesig.models.User;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private FirebaseAuth mAuth= FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String TAG = "connexion";
     private Button inscription, connexion;
 // ...
@@ -48,7 +55,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+
+
+            String uid = FirebaseAuth.getInstance().getUid();
+            ValueEventListener userListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    Log.d("userStart", new Gson().toJson(user));
+                    updateUI(user);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                    // ...
+                }
+            };
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+            DatabaseReference usersRef = ref.child(uid);
+            usersRef.addValueEventListener(userListener);
+
+        }
+    }
+
+    public void updateUI(User user) {
         Intent accueil = new Intent(MainActivity.this, HomeActivity.class);
+        accueil.putExtra("user", user);
         startActivity(accueil);
     }
     @Override

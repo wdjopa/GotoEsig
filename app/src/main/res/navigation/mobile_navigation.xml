@@ -42,25 +42,26 @@
         android:name="fr.tchatat.gotoesig.ui.statistiques.StatistiquesFragment"
         android:label="@string/menu_statistiques"
         tools:layout="@layout/fragment_statistiques" />
-<!--
 
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="fr.tchatat.gotoesig.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+    <!--
 
-    <fragment
-        android:id="@+id/nav_tools"
-        android:name="fr.tchatat.gotoesig.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        <fragment
+            android:id="@+id/nav_slideshow"
+            android:name="fr.tchatat.gotoesig.ui.slideshow.SlideshowFragment"
+            android:label="@string/menu_slideshow"
+            tools:layout="@layout/fragment_slideshow" />
 
-    <fragment
-        android:id="@+id/nav_share"
-        android:name="fr.tchatat.gotoesig.ui.share.ShareFragment"
-        android:label="@string/menu_share"
-        tools:layout="@layout/fragment_share" />
--->
+        <fragment
+            android:id="@+id/nav_tools"
+            android:name="fr.tchatat.gotoesig.ui.tools.ToolsFragment"
+            android:label="@string/menu_tools"
+            tools:layout="@layout/fragment_tools" />
+
+        <fragment
+            android:id="@+id/nav_share"
+            android:name="fr.tchatat.gotoesig.ui.share.ShareFragment"
+            android:label="@string/menu_share"
+            tools:layout="@layout/fragment_share" />
+    -->
 
 </navigation>
