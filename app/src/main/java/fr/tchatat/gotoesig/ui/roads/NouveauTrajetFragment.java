@@ -30,12 +30,20 @@ import java.util.List;
 
 import fr.tchatat.gotoesig.R;
 
-public class NouveauTrajetFragment extends Fragment {
+public class NouveauTrajetFragment extends Fragment implements View.OnClickListener {
 
     private NouveauTrajetViewModel nouveauTrajetViewModel;
     private Spinner spinnerMoyen;
     private Spinner spinnerAutoroute;
     private ConstraintLayout voiturelayout;
+    private static List<String> moyens;
+    private static ArrayAdapter<String> adapter1;
+
+    public void setSpinner(){
+        adapter1 = new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item, moyens);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerMoyen.setAdapter(adapter1);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,29 +64,26 @@ public class NouveauTrajetFragment extends Fragment {
         FirebaseApp.initializeApp(this.getActivity());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        moyens = new ArrayList<String>();
+
         spinnerMoyen = root.findViewById(R.id.spinMoyen);
-        final ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getActivity(), R.array.moyens_array, android.R.layout.simple_spinner_item);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        List<String> moyens = new ArrayList<>();
-
-        spinnerMoyen.setAdapter(adapter1);
 
         DocumentReference user = db.collection("moyensTransport").document("xLOCQO7bas6ToVKUezOq");
         user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
-                    Log.d("data", task.getResult().get("moyens").toString());
-                    adapter1.notifyDataSetChanged();
+                    NouveauTrajetFragment.moyens = (ArrayList<String>) task.getResult().get("moyens");
+                    //Log.d("data", moyens.toString());
+                    setSpinner();
                 }
             }
         });
 
-
         spinnerAutoroute = root.findViewById(R.id.spinAutoroute);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this.getActivity(), R.array.autoroute_array, android.R.layout.simple_spinner_item);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAutoroute.setAdapter(adapter2);
 
         spinnerMoyen.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -99,5 +104,10 @@ public class NouveauTrajetFragment extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

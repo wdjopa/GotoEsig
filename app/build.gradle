@@ -40,6 +40,9 @@ dependencies {
     //FireBase
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
 
+    //FireBase Database
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+
     //FireBase Authentication
     implementation 'com.google.firebase:firebase-auth:19.2.0'
 
