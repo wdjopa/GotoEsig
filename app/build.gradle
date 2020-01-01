@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
     compileSdkVersion 28
     buildToolsVersion "29.0.2"
@@ -34,8 +36,35 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
+
+    //FireBase
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
+
+    //FireBase Authentication
     implementation 'com.google.firebase:firebase-auth:19.2.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+
+    //FireBase Firestore for storage
+    implementation 'com.google.firebase:firebase-firestore:21.3.1'
+
+    //Google Material
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
+
+    // Steppers
+    implementation 'com.shuhart.stepview:stepview:1.5.0'
+
+    // Google Maps
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    // Image Cropper pour la photo de profil
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
+    // Firebase storage for images
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
+
+    // Picasso for images
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // For Circular image view
+    implementation 'com.mikhaellopez:circularimageview:4.1.1'
 
 }
-apply plugin: 'com.google.gms.google-services'
