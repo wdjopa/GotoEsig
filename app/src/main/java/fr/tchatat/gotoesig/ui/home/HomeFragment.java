@@ -22,11 +22,13 @@ import androidx.lifecycle.ViewModelProviders;
 
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.ui.roads.MesTrajetsFragment;
+import fr.tchatat.gotoesig.ui.roads.NouveauTrajetFragment;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private CardView mesTrajets;
+    private CardView ajoutTrajet;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
