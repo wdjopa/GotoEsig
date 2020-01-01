@@ -25,6 +25,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.tchatat.gotoesig.R;
 
 public class NouveauTrajetFragment extends Fragment {
@@ -53,22 +56,25 @@ public class NouveauTrajetFragment extends Fragment {
         FirebaseApp.initializeApp(this.getActivity());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        spinnerMoyen = root.findViewById(R.id.spinMoyen);
+        final ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getActivity(), R.array.moyens_array, android.R.layout.simple_spinner_item);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        List<String> moyens = new ArrayList<>();
+
+        spinnerMoyen.setAdapter(adapter1);
+
         DocumentReference user = db.collection("moyensTransport").document("xLOCQO7bas6ToVKUezOq");
         user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     Log.d("data", task.getResult().get("moyens").toString());
-                }else{
-
+                    adapter1.notifyDataSetChanged();
                 }
             }
         });
 
-        spinnerMoyen = root.findViewById(R.id.spinMoyen);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this.getActivity(), R.array.moyens_array, android.R.layout.simple_spinner_item);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMoyen.setAdapter(adapter1);
 
         spinnerAutoroute = root.findViewById(R.id.spinAutoroute);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this.getActivity(), R.array.autoroute_array, android.R.layout.simple_spinner_item);
