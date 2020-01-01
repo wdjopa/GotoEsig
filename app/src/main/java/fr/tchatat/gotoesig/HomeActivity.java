@@ -48,15 +48,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
-        Log.d("user", new Gson().toJson(user));
-/*
-        ((TextView)findViewById(R.id.nomPrenom)).setText(user.getPrenom()+" "+user.getNom());
-        ((TextView)findViewById(R.id.pointsHeader)).setText(user.getScore()+" pt(s)");
-*/
+        Log.d("userHome", user.getPseudo());
+
+
+//        TextView nomPrenom = findViewById(R.id.nomPrenom);
+//        nomPrenom.setText(user.getPseudo());
+        // ((TextView)findViewById(R.id.pointsHeader)).setText(user.getScore()+" pt(s)");
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.nomPrenom);
+        TextView navScore = (TextView) headerView.findViewById(R.id.pointsHeader);
+        navUsername.setText(user.getPseudo());
+        navScore.setText(user.getScore() + " pts");
+
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_add_road, R.id.nav_my_roads, R.id.nav_chercher_trajet,
                 R.id.nav_profile, R.id.nav_evaluer, R.id.nav_statistiques,R.id.nav_home)
