@@ -53,6 +53,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,6 +65,7 @@ import java.util.Map;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.User;
+import fr.tchatat.gotoesig.models.UserTrajet;
 import fr.tchatat.gotoesig.ui.home.HomeFragment;
 
 public class NouveauTrajetFragment extends Fragment {
@@ -85,6 +89,9 @@ public class NouveauTrajetFragment extends Fragment {
     private final String key = "AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY";
     private static String dist = "";
     private static String temps = "";
+    private static String mode = "";
+    private static String transit = "";
+    private static String depTime = "";
 
 
     public void setSpinner(){
@@ -96,7 +103,11 @@ public class NouveauTrajetFragment extends Fragment {
     private void popup(String key, final String adresse, final String auto, final float fcontrib, final String date, final String heure, final String moyenT, final int iret, final int iplaces) {
         // First, we insert the username into the repo url.
         // The repo url is defined in GitHubs API docs (https://developer.github.com/v3/repos/).
-        this.url = this.baseUrl + adresse + "&destinations=ESIGELEC,SER,France&key=" + key;
+
+        if (!transit.equals("")) transit = "&transit_mode=" + transit;
+        if (!mode.equals("")) mode = "&mode=" + mode;
+
+        this.url = this.baseUrl + adresse + "&destinations=ESIGELEC,SER,France"+ mode + transit + "&departure_time="+ depTime +"&key=" + key;
 
         // Next, we create a new JsonArrayRequest. This will use Volley to make a HTTP request
         // that expects a JSON Array Response.
@@ -134,9 +145,11 @@ public class NouveauTrajetFragment extends Fragment {
                                         String uid = FirebaseAuth.getInstance().getUid();
                                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets");
 
+                                        DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("/users");
                                         String id = String.valueOf(System.currentTimeMillis());
 
-                                        DatabaseReference usersRef = ref.child(id);
+                                        DatabaseReference trajetsRef = ref.child(id);
+                                        DatabaseReference usersRef = ref2.child(uid + "/trajets/" +id);
                                         Trajet trajet = new Trajet();
                                         trajet.setAdresse(adresse);
                                         trajet.setAutoroute(auto);
@@ -154,7 +167,8 @@ public class NouveauTrajetFragment extends Fragment {
                                         Map<String, Trajet> trajets = new HashMap<>();
                                         trajets.put(id, trajet);
 
-                                        usersRef.setValue(trajet);
+                                        trajetsRef.setValue(trajet);
+                                        usersRef.setValue(new UserTrajet(id));
 
                                         Fragment fragment = new HomeFragment();
                                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -243,9 +257,30 @@ public class NouveauTrajetFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(spinnerMoyen.getSelectedItem().toString().equals("Voiture")){
                     voiturelayout.setVisibility(ConstraintLayout.VISIBLE);
+                    mode = "driving";
                 }
                 else {
                     voiturelayout.setVisibility(ConstraintLayout.GONE);
+                    if(spinnerMoyen.getSelectedItem().toString().equals("Métro")) {
+                        mode = "";
+                        transit = "rail";
+                    }
+                    if(spinnerMoyen.getSelectedItem().toString().equals("Bus")) {
+                        mode = "";
+                        transit = "bus";
+                    }
+                    if(spinnerMoyen.getSelectedItem().toString().equals("Vélo")){
+                        mode = "bicycling";
+                        transit = "";
+                    }
+                    if(spinnerMoyen.getSelectedItem().toString().equals("Marche")){
+                        mode = "Walking";
+                        transit = "";
+                    }
+                    if(spinnerMoyen.getSelectedItem().toString().equals("Moto")){
+                        mode = "driving";
+                        transit = "";
+                    }
                 }
             }
 
@@ -271,14 +306,22 @@ public class NouveauTrajetFragment extends Fragment {
                 if(adresse.matches("") || date.matches("") || heure.matches("") || ret.matches("") || places.matches("") || places.matches("") || (moyenT.equals("Voiture") && contrib.matches(""))){
                     Toast.makeText(getActivity(), "Tous les champs sont obligatoires", Toast.LENGTH_SHORT).show();
                 }else{
+                    try{
+                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+                        Date laDate = (Date)formatter.parse(date + " " + heure + ":00");
+                        depTime = String.valueOf(laDate.getTime());
 
-                    final int iplaces = Integer.parseInt(places);
-                    final int iret = Integer.parseInt(ret);
-                    final float fcontrib = (moyenT.equals("Voiture") ? Float.parseFloat(contrib) : 0);
+                        final int iplaces = Integer.parseInt(places);
+                        final int iret = Integer.parseInt(ret);
+                        final float fcontrib = (moyenT.equals("Voiture") ? Float.parseFloat(contrib) : 0);
 
-                    Log.d("ok", "Clic");
+                        Log.d("ok", "Clic");
 
-                    popup(key, adresse, auto, fcontrib, date, heure, moyenT, iret, iplaces);
+                        popup(key, adresse, auto, fcontrib, date, heure, moyenT, iret, iplaces);
+                    }catch(ParseException pe){
+                        Toast.makeText(getActivity(), "La date et/ou l'heure entrée est incorrecte", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
             }
