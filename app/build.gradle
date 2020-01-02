@@ -73,11 +73,8 @@ dependencies {
     // For Circular image view
     implementation 'com.mikhaellopez:circularimageview:4.1.1'
 
-<<<<<<< HEAD
 
     implementation "com.xwray:groupie:2.7.0"
-=======
     implementation 'com.mcxiaoke.volley:library:1.0.19'
->>>>>>> 81f4658e0abf59553738eaea97bafba97b88d480
 
 }
