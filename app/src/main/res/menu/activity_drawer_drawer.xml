@@ -16,21 +16,22 @@
         <item
             android:id="@+id/nav_chercher_trajet"
             android:title="@string/menu_search_road" />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:title="@string/menu_profile" />
+        <item
+            android:id="@+id/nav_evaluer"
+            android:title="@string/menu_evaluate" />
+        <item
+            android:id="@+id/nav_statistiques"
+            android:title="@string/menu_statistiques" />
     </group>
 
-    <item android:title="PERSONNEL">
-        <menu>
-            <item
-                android:id="@+id/nav_profile"
-                android:title="@string/menu_profile" />
-            <item
-                android:id="@+id/nav_evaluer"
-                android:title="@string/menu_evaluate" />
-            <item
-                android:id="@+id/nav_statistiques"
-                android:title="@string/menu_statistiques" />
+    <!-- <item android:title="PERSONNEL">
+         <menu>
 
-        </menu>
-    </item>
+         </menu>
+     </item>-->
 
 </menu>

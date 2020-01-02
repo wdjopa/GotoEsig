@@ -8,17 +8,33 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+    <!-- <com.mikhaellopez.circularimageview.CircularImageView
+         android:id="@+id/avatar"
+         android:layout_width="185dp"
+         android:layout_height="185dp"
+         android:src="@drawable/ic_launcher_background"
+         app:civ_border_color="#EEEEEE"
+         app:civ_border_width="1dp"
+         app:civ_shadow="false"
+         app:civ_shadow_color="#8BC34A"
+         app:civ_shadow_radius="10"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />-->
+
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/avatar"
         android:layout_width="185dp"
         android:layout_height="185dp"
-        android:src="@drawable/ic_launcher_background"
-        app:civ_border_color="#EEEEEE"
-        app:civ_border_width="1dp"
-        app:civ_shadow="false"
-        app:civ_shadow_color="#8BC34A"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/user"
+        app:civ_border_color="#eee"
+        app:civ_border_width="4dp"
+        app:civ_shadow="true"
+        app:civ_shadow_color="#906868FF"
         app:civ_shadow_radius="10"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

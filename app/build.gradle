@@ -73,4 +73,7 @@ dependencies {
     // For Circular image view
     implementation 'com.mikhaellopez:circularimageview:4.1.1'
 
+
+    implementation "com.xwray:groupie:2.7.0"
+
 }
