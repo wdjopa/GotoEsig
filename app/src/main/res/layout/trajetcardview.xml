@@ -3,40 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F4FAFF"
-    android:padding="10dp"
-    android:textAlignment="viewEnd">
-
-    <TextView
-        android:id="@+id/text_slideshow"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/lato"
-        android:text="EN COURS"
-        android:textAlignment="textStart"
-        android:textColor="#0D3FA0"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/current_road"
+        android:id="@+id/ended_road_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/card"
         android:padding="5dp"
         app:cardElevation="3dp"
-        app:layout_constraintEnd_toEndOf="@+id/text_slideshow"
-        app:layout_constraintStart_toStartOf="@+id/text_slideshow"
-        app:layout_constraintTop_toBottomOf="@+id/text_slideshow">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -44,7 +24,7 @@
             android:padding="8dp">
 
             <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/avatar_user"
+                android:id="@+id/avatar_user_1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="12dp"
@@ -59,7 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/textView6_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -68,11 +48,11 @@
                 android:text="Départ à"
                 android:textColor="@color/blue_text"
                 android:textSize="10dp"
-                app:layout_constraintStart_toEndOf="@+id/avatar_user"
-                app:layout_constraintTop_toTopOf="@+id/avatar_user" />
+                app:layout_constraintStart_toEndOf="@+id/avatar_user_1"
+                app:layout_constraintTop_toTopOf="@+id/avatar_user_1" />
 
             <TextView
-                android:id="@+id/myroads_current_departure_location"
+                android:id="@+id/myroads_current_departure_location_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -80,36 +60,36 @@
                 android:text="TextView"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                app:layout_constraintBottom_toBottomOf="@+id/avatar_user"
-                app:layout_constraintStart_toStartOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/textView6"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar_user_1"
+                app:layout_constraintStart_toStartOf="@+id/textView6_1"
+                app:layout_constraintTop_toBottomOf="@+id/textView6_1"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/myroads_current_departure_date"
+                android:id="@+id/myroads_current_departure_date_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/lato"
                 android:text="02/12/2019 07:50"
                 android:textSize="15dp"
-                app:layout_constraintStart_toStartOf="@+id/avatar_user"
-                app:layout_constraintTop_toBottomOf="@+id/avatar_user" />
+                app:layout_constraintStart_toStartOf="@+id/avatar_user_1"
+                app:layout_constraintTop_toBottomOf="@+id/avatar_user_1" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/textView10_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/lato"
                 android:text="Proposé par "
                 android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_username"
-                app:layout_constraintEnd_toStartOf="@+id/myroads_current_departure_username"
-                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_username" />
+                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_username_1"
+                app:layout_constraintEnd_toStartOf="@+id/myroads_current_departure_username_1"
+                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_username_1" />
 
             <TextView
-                android:id="@+id/myroads_current_departure_username"
+                android:id="@+id/myroads_current_departure_username_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
@@ -117,13 +97,13 @@
                 android:text="Eunice"
                 android:textColor="@color/blue_text"
                 android:textSize="15dp"
-                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_price"
+                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_price_1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_price"
+                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_price_1"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/myroads_current_departure_mode"
+                android:id="@+id/myroads_current_departure_mode_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -132,24 +112,24 @@
                 android:text="Autoroute"
                 android:textSize="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/myroads_current_departure_date"
-                app:layout_constraintTop_toBottomOf="@+id/myroads_current_departure_date" />
+                app:layout_constraintStart_toStartOf="@+id/myroads_current_departure_date_1"
+                app:layout_constraintTop_toBottomOf="@+id/myroads_current_departure_date_1" />
 
             <TextView
-                android:id="@+id/myroads_current_departure_price"
+                android:id="@+id/myroads_current_departure_price_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/lato_bold"
                 android:text="2,60€"
                 android:textColor="@color/blue"
-                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_mode"
-                app:layout_constraintStart_toEndOf="@+id/myroads_current_departure_mode"
-                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_mode"
+                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_mode_1"
+                app:layout_constraintStart_toEndOf="@+id/myroads_current_departure_mode_1"
+                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_mode_1"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView
-                android:id="@+id/myroads_current_departure_places"
+                android:id="@+id/myroads_current_departure_places_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
@@ -157,39 +137,10 @@
                 android:text="3/4 places"
                 android:textColor="@color/blue_text"
                 android:textSize="18dp"
-                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_date"
+                app:layout_constraintBottom_toBottomOf="@+id/myroads_current_departure_date_1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_date" />
+                app:layout_constraintTop_toTopOf="@+id/myroads_current_departure_date_1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/text_slideshow2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/lato"
-        android:text="TERMINÉS"
-        android:textAlignment="textStart"
-        android:textColor="#0D3FA0"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/current_road"
-        app:layout_constraintStart_toStartOf="@+id/current_road"
-        app:layout_constraintTop_toBottomOf="@+id/current_road" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/trajets_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_slideshow2" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
