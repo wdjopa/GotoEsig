@@ -1,11 +1,10 @@
 package fr.tchatat.gotoesig.ui.roads;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,27 +12,23 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -45,7 +40,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.Response;
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
@@ -57,6 +51,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +59,6 @@ import java.util.Map;
 
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.Trajet;
-import fr.tchatat.gotoesig.models.User;
 import fr.tchatat.gotoesig.models.UserTrajet;
 import fr.tchatat.gotoesig.ui.home.HomeFragment;
 
@@ -219,8 +213,8 @@ public class NouveauTrajetFragment extends Fragment {
 
         voiturelayout = root.findViewById(R.id.voitureLayout);
         voiturelayout.setVisibility(ConstraintLayout.GONE);
-        ptDepart = root.findViewById(R.id.etPoint);
-        dDepart = root.findViewById(R.id.etDate);
+        ptDepart = root.findViewById(R.id.etPointSearch);
+        dDepart = root.findViewById(R.id.etDateSearch);
         hDepart = root.findViewById(R.id.etTime);
         retard = root.findViewById(R.id.etRetard);
         contribution = root.findViewById(R.id.etContribution);
@@ -233,7 +227,6 @@ public class NouveauTrajetFragment extends Fragment {
         moyens = new ArrayList<String>();
 
         spinnerMoyen = root.findViewById(R.id.spinMoyen);
-
 
         DocumentReference user = db.collection("moyensTransport").document("xLOCQO7bas6ToVKUezOq");
         user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -287,6 +280,47 @@ public class NouveauTrajetFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        final Calendar myCalendar = Calendar.getInstance();
+
+        final DatePickerDialog.OnDateSetListener datePick = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                String myFormat = "dd/MM/yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+                dDepart.setText(sdf.format(myCalendar.getTime()));
+            }
+
+        };
+
+        dDepart.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(getActivity(), datePick, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        hDepart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                        hDepart.setText(hourOfDay + ":" + minutes);
+                    }
+                }, 0, 0, true).show();
             }
         });
 

@@ -40,7 +40,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvMoyen" />
 
         <TextView
-            android:id="@+id/tvPoint"
+            android:id="@+id/tvPointSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -53,7 +53,7 @@
             app:layout_constraintTop_toBottomOf="@+id/spinMoyen" />
 
         <EditText
-            android:id="@+id/etPoint"
+            android:id="@+id/etPointSearch"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
@@ -66,10 +66,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvPoint" />
+            app:layout_constraintTop_toBottomOf="@+id/tvPointSearch" />
 
         <TextView
-            android:id="@+id/tvDate"
+            android:id="@+id/tvDateSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -79,23 +79,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPoint" />
+            app:layout_constraintTop_toBottomOf="@+id/etPointSearch" />
 
         <EditText
-            android:id="@+id/etDate"
+            android:id="@+id/etDateSearch"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/white_border"
             android:ems="10"
             android:hint="dd/mm/yyyy"
-            android:inputType="date"
             android:paddingLeft="10sp"
+            android:clickable="true"
+            android:editable="false"
             android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDate" />
+            app:layout_constraintTop_toBottomOf="@+id/tvDateSearch" />
 
         <EditText
             android:id="@+id/etTime"
@@ -105,13 +106,14 @@
             android:background="@drawable/white_border"
             android:ems="10"
             android:hint="hh:mm"
-            android:inputType="time"
             android:paddingLeft="10sp"
+            android:clickable="true"
+            android:editable="false"
             android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etDate" />
+            app:layout_constraintTop_toBottomOf="@+id/etDateSearch" />
 
         <TextView
             android:id="@+id/tvRetard"
