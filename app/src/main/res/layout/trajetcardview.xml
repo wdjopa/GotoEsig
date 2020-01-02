@@ -45,7 +45,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/lato"
-                android:text="Départ à"
+                android:text="Départ"
                 android:textColor="@color/blue_text"
                 android:textSize="10dp"
                 app:layout_constraintStart_toEndOf="@+id/avatar_user_1"

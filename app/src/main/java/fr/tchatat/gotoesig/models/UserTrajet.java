@@ -4,6 +4,9 @@ public class UserTrajet {
 
     private String id;
 
+    public UserTrajet(){
+
+    }
     public UserTrajet(String id) {
         this.id = id;
     }

@@ -36,12 +36,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String TAG = "connexion";
     private Button inscription, connexion;
-// ...
+    private Global vars;
+
+    // ...
 // Initialize Firebase Auth
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        vars = (Global) getApplicationContext();
+
 
         inscription = findViewById(R.id.btnRegister);
         inscription.setOnClickListener(this);
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
                     Log.d("userStart", new Gson().toJson(user));
+                    vars.setUser(user);
                     updateUI(user);
                 }
 
