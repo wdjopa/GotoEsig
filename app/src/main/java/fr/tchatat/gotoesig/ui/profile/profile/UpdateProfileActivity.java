@@ -136,7 +136,9 @@ public class UpdateProfileActivity extends AppCompatActivity {
         if (p != null)
             user.setProfileImage(p.toString());
         usersRef.setValue(user);
-
+        Intent intent=new Intent();
+        intent.putExtra("user", user);
+        setResult(2,intent);
         finish();
     }
 

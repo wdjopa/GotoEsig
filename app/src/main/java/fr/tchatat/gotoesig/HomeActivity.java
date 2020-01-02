@@ -67,7 +67,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         TextView navUsername = headerView.findViewById(R.id.nomPrenom);
         TextView navScore = headerView.findViewById(R.id.pointsHeader);
         ImageView imageAvatar = headerView.findViewById(R.id.profilePicture);
-        Picasso.get().load(user.getProfileImage()).into(imageAvatar);
+        if(user.getProfileImage() != null && !user.getProfileImage().equals("")){
+            Picasso.get().load(user.getProfileImage()).into(imageAvatar);
+        }
         navUsername.setText(user.getPseudo());
         navScore.setText(user.getScore() + " pts");
 
