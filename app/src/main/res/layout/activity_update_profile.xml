@@ -1,98 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="30dp"
-    tools:context=".ui.profile.profile.UpdateProfileActivity">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="168dp"
-        android:layout_height="168dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/user" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        tools:context=".ui.profile.profile.UpdateProfileActivity">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.474"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/ppUpdate"
+            android:layout_width="168dp"
+            android:layout_height="168dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/user"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:civ_border_color="#eee"
+            app:civ_border_width="4dp"
+            app:civ_shadow="true"
+            app:civ_shadow_color="#906868FF"
+            app:civ_shadow_radius="10"
+            app:layout_constraintHorizontal_bias="0.497" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14sp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="@+id/editText"
-        app:layout_constraintStart_toStartOf="@+id/editText"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        <EditText
+            android:id="@+id/etPrenomUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/rounded_white"
+            android:ems="10"
+            android:hint="Votre prénom"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.474"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ppUpdate" />
 
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14sp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="@+id/editText2"
-        app:layout_constraintStart_toStartOf="@+id/editText2"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        <EditText
+            android:id="@+id/etNomUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:background="@drawable/rounded_white"
+            android:ems="10"
+            android:hint="Votre nom"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/etPrenomUpdate"
+            app:layout_constraintStart_toStartOf="@+id/etPrenomUpdate"
+            app:layout_constraintTop_toBottomOf="@+id/etPrenomUpdate" />
 
-    <EditText
-        android:id="@+id/editText4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14sp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="@+id/editText3"
-        app:layout_constraintStart_toStartOf="@+id/editText3"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        <EditText
+            android:id="@+id/etPseudoUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:background="@drawable/rounded_white"
+            android:ems="10"
+            android:hint="Votre pseudo"
+            android:inputType="textPersonName"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/etNomUpdate"
+            app:layout_constraintStart_toStartOf="@+id/etNomUpdate"
+            app:layout_constraintTop_toBottomOf="@+id/etNomUpdate" />
 
-    <EditText
-        android:id="@+id/editText5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14sp"
-        android:ems="10"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="@+id/editText4"
-        app:layout_constraintStart_toStartOf="@+id/editText4"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        <EditText
+            android:id="@+id/etEmailUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:background="@drawable/rounded_white"
+            android:ems="10"
+            android:hint="Votre adresse email"
+            android:inputType="textEmailAddress"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/etPseudoUpdate"
+            app:layout_constraintStart_toStartOf="@+id/etPseudoUpdate"
+            app:layout_constraintTop_toBottomOf="@+id/etPseudoUpdate" />
 
-    <EditText
-        android:id="@+id/editText6"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14sp"
-        android:ems="10"
-        android:inputType="textPostalAddress"
-        app:layout_constraintEnd_toEndOf="@+id/editText5"
-        app:layout_constraintStart_toStartOf="@+id/editText5"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        <EditText
+            android:id="@+id/etTelUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:background="@drawable/rounded_white"
+            android:ems="10"
+            android:hint="Votre tel"
+            android:inputType="phone"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/etEmailUpdate"
+            app:layout_constraintStart_toStartOf="@+id/etEmailUpdate"
+            app:layout_constraintTop_toBottomOf="@+id/etEmailUpdate" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="@+id/editText6"
-        app:layout_constraintStart_toStartOf="@+id/editText6"
-        app:layout_constraintTop_toBottomOf="@+id/editText6" />
+        <EditText
+            android:id="@+id/etAdresseUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14sp"
+            android:background="@drawable/rounded_white"
+            android:ems="10"
+            android:hint="Votre localisation "
+            android:inputType="textPostalAddress"
+            android:padding="12dp"
+            app:layout_constraintEnd_toEndOf="@+id/etTelUpdate"
+            app:layout_constraintStart_toStartOf="@+id/etTelUpdate"
+            app:layout_constraintTop_toBottomOf="@+id/etTelUpdate" />
+
+        <Button
+            android:id="@+id/updateBtn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/rounded_blue"
+            android:fontFamily="@font/lato_bold"
+            android:text="MODIFIER"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/etAdresseUpdate"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/etAdresseUpdate"
+            app:layout_constraintTop_toBottomOf="@+id/etAdresseUpdate" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,5 +1,6 @@
 package fr.tchatat.gotoesig;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -30,6 +32,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import fr.tchatat.gotoesig.models.User;
@@ -61,8 +64,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // menu should be considered as top level destinations.
 
         View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = (TextView) headerView.findViewById(R.id.nomPrenom);
-        TextView navScore = (TextView) headerView.findViewById(R.id.pointsHeader);
+        TextView navUsername = headerView.findViewById(R.id.nomPrenom);
+        TextView navScore = headerView.findViewById(R.id.pointsHeader);
+        ImageView imageAvatar = headerView.findViewById(R.id.profilePicture);
+        if(user.getProfileImage() != null && !user.getProfileImage().equals("")){
+            Picasso.get().load(user.getProfileImage()).into(imageAvatar);
+        }
         navUsername.setText(user.getPseudo());
         navScore.setText(user.getScore() + " pts");
 

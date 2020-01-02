@@ -120,9 +120,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                Intent home = new Intent(MainActivity.this, HomeActivity.class);
-                                startActivity(home);
+                                String uid = FirebaseAuth.getInstance().getUid();
+                                ValueEventListener userListener = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        User user = dataSnapshot.getValue(User.class);
+                                        Log.d("userStart", new Gson().toJson(user));
+                                        updateUI(user);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        // Getting Post failed, log a message
+                                        Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                                        // ...
+                                    }
+                                };
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                                DatabaseReference usersRef = ref.child(uid + "/account");
+                                usersRef.addValueEventListener(userListener);
                             } else {
                                 try {
                                     throw task.getException();
