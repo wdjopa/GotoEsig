@@ -2,6 +2,7 @@ package fr.tchatat.gotoesig;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import fr.tchatat.gotoesig.models.TrajetCard;
 public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
 
     Context c;
-    ArrayList<TrajetCard> trajets;
+    ArrayList<TrajetCard> trajets = new ArrayList<TrajetCard>();
 
     public TrajetAdapter(Context c, ArrayList<TrajetCard> trajets) {
         this.c = c;
@@ -28,9 +29,8 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
     @NonNull
     @Override
     public TrajetHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.trajetcardview, null);
-
-        return new TrajetHolder(parent);
+        View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.trajetcardview, parent, false);
+        return new TrajetHolder(view);
     }
 
     @Override
@@ -39,12 +39,15 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
         holder.proposer.setText(trajets.get(position).getUser().getPseudo());
         holder.depart.setText(trajets.get(position).getTrajet().getAdresse());
         holder.date.setText(trajets.get(position).getTrajet().getDate());
-        holder.places.setText(trajets.get(position).getTrajet().getNombre()+"/"+trajets.get(position).getUsers().size());
         holder.mode.setText(trajets.get(position).getTrajet().getMoyen());
+        if(trajets.get(position).getTrajet().getContribution() > 0)
+            holder.contribution.setText(trajets.get(position).getTrajet().getContribution()+"€");
+        holder.places.setText(trajets.get(position).total()+"/"+trajets.get(position).getTrajet().getNombre()+" Places");
+
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return trajets.size();
     }
 }

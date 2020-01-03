@@ -1,11 +1,13 @@
 package fr.tchatat.gotoesig.models;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class TrajetCard {
     private Trajet trajet;
     private User user;
-    private ArrayList<User> users;
+    private ArrayList<User> users = new ArrayList<User>();
 
     public Trajet getTrajet() {
         return trajet;
@@ -27,6 +29,10 @@ public class TrajetCard {
         return users;
     }
 
+    public int total() {
+        return users.size();
+    }
+
     public void setUsers(ArrayList<User> users) {
         this.users = users;
     }
@@ -36,5 +42,9 @@ public class TrajetCard {
         this.trajet = trajet;
     }
 
-
+    @NonNull
+    @Override
+    public String toString() {
+        return "Trajet de "+trajet.getAdresse()+", le "+trajet.getDate()+" à "+trajet.getHeure()+". Créé par "+user.getPseudo();
+    }
 }

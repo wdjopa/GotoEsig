@@ -43,7 +43,7 @@ public class MesTrajetsFragment extends Fragment {
     private MesTrajetsViewModel mesTrajetsViewModel;
     RecyclerView listeTrajets;
     TrajetAdapter listeTrajetsAdapter;
-    ArrayList<TrajetCard> trajets;
+    ArrayList<TrajetCard> trajets = new ArrayList<TrajetCard>();
     Global vars;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,47 +51,72 @@ public class MesTrajetsFragment extends Fragment {
         final View root = inflater.inflate(R.layout.fragment_mes_trajets, container, false);
         getActivity().setTitle("Mes Trajets");
         vars = (Global) getActivity().getApplicationContext();
+/*
+        Trajet test= new Trajet();
+        test.setAdresse("2 Rue Hélène Boucher, 76140 Le Petit-Quevilly, France");
+        test.setAutoroute("Non");
+        test.setContribution(0);
+        test.setDate("15/08/2020");
+        test.setDistance("148km");
+        test.setHeure("07:30");
+        test.setId("1577990065826");
+        test.setMoyen("Moto");
+        test.setRetard(5);
+        test.setNombre(2);
+        test.setUid(vars.getUser().getUid());
 
+        trajets.add(new TrajetCard(vars.getUser(), test));
+*/
         listeTrajets = root.findViewById(R.id.trajets_list);
+        listeTrajetsAdapter = new TrajetAdapter(getActivity(), trajets);
+
         listeTrajets.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listeTrajets.setAdapter(listeTrajetsAdapter);
 
 
         ValueEventListener userListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                UserTrajet userTrajet = dataSnapshot.getValue(UserTrajet.class);
-                Log.d("userTrajet", new Gson().toJson(userTrajet));
 
-                if(userTrajet != null){
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets");
-                    DatabaseReference trajetRef = ref.child(userTrajet.getId());
+                    for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                    {
 
-                    ValueEventListener userListener = new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Trajet trajet = dataSnapshot.getValue(Trajet.class);
-                            Log.d("userStart", new Gson().toJson(trajet ));
-                            trajets.add(new TrajetCard(vars.getUser(), trajet));
+                        UserTrajet userTrajet = new UserTrajet();
+                        userTrajet.setId(snapshot.child("id").getValue().toString());
+                        if(userTrajet.getId() != null){
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets");
+                            DatabaseReference trajetRef = ref.child(userTrajet.getId());
 
+                            ValueEventListener userListener = new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Trajet trajet = dataSnapshot.getValue(Trajet.class);
+                                    if(trajet != null){
 
-                            listeTrajetsAdapter = new TrajetAdapter(getActivity(), trajets);
-                            listeTrajets.setAdapter(listeTrajetsAdapter);
+                                        Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                                        trajets.add(new TrajetCard(vars.getUser(), trajet));
+                                        Log.w("Liste des trajets", trajets.toString());
+                                        listeTrajets.scrollToPosition(trajets.size() );
+                                        listeTrajetsAdapter.notifyItemInserted(trajets.size());
+                                        listeTrajetsAdapter.notifyDataSetChanged();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    // Getting Post failed, log a message
+                                    Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+                                    // ...
+                                }
+                            };
+                            trajetRef.addValueEventListener(userListener);
 
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            // Getting Post failed, log a message
-                            Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
-                            // ...
+                        else{
+                            Toast.makeText(vars, "Aucun trajet pour cet utilisateur", Toast.LENGTH_SHORT).show();
                         }
-                    };
-                    trajetRef.addValueEventListener(userListener);
+                    }
 
-                }
-                else{
-                    Toast.makeText(vars, "Aucun trajet pour cet utilisateur", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
@@ -104,6 +129,8 @@ public class MesTrajetsFragment extends Fragment {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
         DatabaseReference usersRef = ref.child(vars.getUser().getUid()+ "/trajets");
         usersRef.addValueEventListener(userListener);
+
+
 
         //final TextView textView = root.findViewById(R.id.text_gallery);
         /*

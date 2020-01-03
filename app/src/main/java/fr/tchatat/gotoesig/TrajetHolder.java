@@ -7,13 +7,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import fr.tchatat.gotoesig.models.User;
 
 public class TrajetHolder extends RecyclerView.ViewHolder {
 
     ImageView avatar;
     TextView depart,date, places, mode, contribution, proposer;
-    User proposerUser;
 
     public TrajetHolder(@NonNull View itemView) {
         super(itemView);
