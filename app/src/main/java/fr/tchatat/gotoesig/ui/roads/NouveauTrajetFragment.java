@@ -145,7 +145,7 @@ public class NouveauTrajetFragment extends Fragment {
                                         DatabaseReference trajetsRef = ref.child(id);
                                         DatabaseReference usersRef = ref2.child(uid + "/trajets/" +id);
                                         Trajet trajet = new Trajet();
-                                        trajet.setAdresse(adresse);
+                                        trajet.setAdresse(adresse.toLowerCase().trim());
                                         trajet.setAutoroute(auto);
                                         trajet.setContribution(fcontrib);
                                         trajet.setDate(date);

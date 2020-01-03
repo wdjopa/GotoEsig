@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,30 +42,32 @@ public class RechercheTrajetFragment extends Fragment {
 
     private EditText etPoint;
     private EditText etDate;
-    private EditText etTime;
     private Button chercher;
 
-    private ArrayList<Trajet> search(String adress, String date, String time){
-        /*DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("39714936");
+    private ArrayList<Trajet> search(final String adress, String date){
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        Query trajetsQuery = databaseRef.child("trajets");
+        if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("date").equalTo(date);
 
-        DatabaseReference trajetsRef = databaseRef.child("trajets");
-        Query trajetsQuery = trajetsRef.child("trajets").
         trajetsQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> cities = new ArrayList<String>();
+                List<Trajet> trajets = new ArrayList<Trajet>();
 
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    cities.add(postSnapshot.getValue().toString());
+                for (DataSnapshot trajet : dataSnapshot.getChildren()) {
+                    Trajet t = trajet.getValue(Trajet.class);
+                    if (t.getAdresse().contains(adress)) trajets.add(t);
                 }
-                System.out.println(cities);
+                Log.d("result", adress);
+
+                Log.d("result", new Gson().toJson(trajets));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
         return null;
     }
@@ -83,7 +87,7 @@ public class RechercheTrajetFragment extends Fragment {
 
         etPoint = root.findViewById(R.id.etPointSearch);
         etDate = root.findViewById(R.id.etDateSearch);
-        etTime = root.findViewById(R.id.etTimeSearch);
+        chercher = root.findViewById(R.id.chercherBtn);
 
         final Calendar myCalendar = Calendar.getInstance();
 
@@ -99,6 +103,7 @@ public class RechercheTrajetFragment extends Fragment {
                 String myFormat = "dd/MM/yyyy";
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
                 etDate.setText(sdf.format(myCalendar.getTime()));
+                search(etPoint.getText().toString(), etDate.getText().toString());
             }
 
         };
@@ -112,7 +117,8 @@ public class RechercheTrajetFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                //Log.d("result", etPoint.getText().toString());
+                search(etPoint.getText().toString(), etDate.getText().toString());
             }
         });
 
@@ -124,18 +130,6 @@ public class RechercheTrajetFragment extends Fragment {
                 new DatePickerDialog(getActivity(), datePick, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-        etTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        etTime.setText(hourOfDay + ":" + minutes);
-                    }
-                }, 0, 0, true).show();
             }
         });
 
