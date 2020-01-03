@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/back">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar3"
@@ -28,8 +29,7 @@
             android:layout_height="match_parent"
             android:background="@color/back"
             android:orientation="vertical"
-            android:padding="20dp"
-            tools:context=".AccueilActivity">
+            android:padding="20dp">
 
 
             <androidx.cardview.widget.CardView
@@ -75,7 +75,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardView2"
+                android:id="@+id/rechercheAccueil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -146,6 +146,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/profileAccueilBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

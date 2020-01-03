@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:paddingLeft="40sp"
     android:paddingTop="10sp"
-    android:paddingEnd="40sp">
+    android:paddingEnd="40sp"
+    android:background="@color/back">
+
 
     <TextView
         android:id="@+id/tvPointSearch"

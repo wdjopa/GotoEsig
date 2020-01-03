@@ -21,13 +21,15 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import fr.tchatat.gotoesig.R;
+import fr.tchatat.gotoesig.ui.profile.profile.ProfileFragment;
 import fr.tchatat.gotoesig.ui.roads.MesTrajetsFragment;
 import fr.tchatat.gotoesig.ui.roads.NouveauTrajetFragment;
+import fr.tchatat.gotoesig.ui.roads.RechercheTrajetFragment;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    private CardView mesTrajets, ajoutTrajet;
+    private CardView mesTrajets, ajoutTrajet, monCompte, recherche;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -50,13 +52,43 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        /*final TextView textView = root.findViewById(R.id.text_home);
+
+        recherche = root.findViewById(R.id.rechercheAccueil);
+        recherche.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new RechercheTrajetFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+        monCompte = root.findViewById(R.id.profileAccueilBtn);
+        monCompte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new ProfileFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+
+
+        /*
+        final TextView textView = root.findViewById(R.id.text_home);
         homeViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
-        });*/
+        });
+        */
 
         ajoutTrajet = root.findViewById(R.id.propTrajetBtn);
         ajoutTrajet.setOnClickListener(new View.OnClickListener(){
@@ -64,6 +96,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View view){
                 Fragment fragment = new NouveauTrajetFragment();
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+         //       fragmentManager.popBackStack();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
                 fragmentTransaction.addToBackStack(null);
