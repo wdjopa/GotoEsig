@@ -65,7 +65,7 @@ public class MesTrajetsFragment extends Fragment {
 */
 
         listeTrajetsTermines = root.findViewById(R.id.trajets_list_termines);
-        listeTrajetsAdapterTermines = new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapterTermines.OnItemClickListener() {
+        listeTrajetsAdapterTermines = new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(TrajetCard item) {
                 Toast.makeText(getActivity(), new Gson().toJson(item), Toast.LENGTH_SHORT);
@@ -77,7 +77,12 @@ public class MesTrajetsFragment extends Fragment {
 
 
         listeTrajetsEnCours= root.findViewById(R.id.trajets_list_en_cours);
-        listeTrajetsAdapterEnCours= new TrajetAdapter(getActivity(), trajetsEnCours);
+        listeTrajetsAdapterEnCours= new TrajetAdapter(getActivity(), trajetsEnCours, new TrajetAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(TrajetCard item) {
+                Toast.makeText(getActivity(), new Gson().toJson(item), Toast.LENGTH_SHORT);
+            }
+        });
 
         listeTrajetsEnCours.setLayoutManager(new LinearLayoutManager(getActivity()));
         listeTrajetsEnCours.setAdapter(listeTrajetsAdapterEnCours);
