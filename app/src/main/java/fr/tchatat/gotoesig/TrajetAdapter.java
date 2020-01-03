@@ -38,8 +38,9 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
         Picasso.get().load(Uri.parse(trajets.get(position).getUser().getProfileImage())).into(holder.avatar);
         holder.proposer.setText(trajets.get(position).getUser().getPseudo());
         holder.depart.setText(trajets.get(position).getTrajet().getAdresse().toUpperCase());
-        holder.date.setText(trajets.get(position).getTrajet().getDate());
+        holder.date.setText(trajets.get(position).getTrajet().getDate()+" "+trajets.get(position).getTrajet().getHeure());
         holder.mode.setText(trajets.get(position).getTrajet().getMoyen());
+
         if(trajets.get(position).getTrajet().getContribution() > 0)
             holder.contribution.setText(trajets.get(position).getTrajet().getContribution()+"€");
         holder.places.setText(trajets.get(position).total()+"/"+trajets.get(position).getTrajet().getNombre()+" Places");

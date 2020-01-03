@@ -1,8 +1,17 @@
 package fr.tchatat.gotoesig.ui.profile.profile;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,17 +21,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.User;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_PHONE_NUMBERS;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
 
 public class ProfileFragment extends Fragment {
 
@@ -30,6 +54,10 @@ public class ProfileFragment extends Fragment {
     private User user;
     private View root;
 
+    TextView pseudo ;
+    TextView tel ;
+    TextView location ;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         profileViewModel =
@@ -37,18 +65,63 @@ public class ProfileFragment extends Fragment {
         setHasOptionsMenu(true);
         root = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        pseudo = root.findViewById(R.id.profile_pnom);
+        tel = root.findViewById(R.id.profile_tel);
+        location = root.findViewById(R.id.profile_location);
+
         Intent intent = getActivity().getIntent();
         user = intent.getParcelableExtra("user");
         ImageView avatar = root.findViewById(R.id.avatar);
-        if(user.getProfileImage() != null && !user.getProfileImage().equals("")) {
+        if (user.getProfileImage() != null && !user.getProfileImage().equals("")) {
             Picasso.get().load(user.getProfileImage()).into(avatar);
         }
    /*     avatar.setImageURI(null);
         avatar.setImageURI(Uri.parse(user.getProfileImage()));*/
         Log.d("user", Uri.parse(user.getProfileImage()) + "");
-        final TextView pseudo = root.findViewById(R.id.profile_pnom);
-        final TextView tel = root.findViewById(R.id.profile_tel);
-        final TextView location = root.findViewById(R.id.profile_location);
+        if (user.getTel().trim().length() == 0) {
+            if (ActivityCompat.checkSelfPermission(root.getContext(),READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+
+                TelephonyManager tMgr = (TelephonyManager)   getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                String mPhoneNumber = tMgr.getLine1Number();
+
+                if(!mPhoneNumber.equals("")){
+
+                    user.setTel(mPhoneNumber);
+                    String uid = FirebaseAuth.getInstance().getUid();
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                    DatabaseReference usersRef = ref.child(uid + "/account");
+                    usersRef.setValue(user);
+                }
+            } else {
+                requestPermission();
+            }
+
+        }
+        Log.e("tel", user.toString());
+       // Toast.makeText(root.getContext(), "hors"+user.getTel(), Toast.LENGTH_SHORT).show();
+        if (ActivityCompat.checkSelfPermission(root.getContext(),ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null) {
+                Location lastKnownLocationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (lastKnownLocationGPS != null) {
+                    Log.d("positions", lastKnownLocationGPS.getLatitude()+" ---- "+lastKnownLocationGPS.getLongitude());
+                    getAddressFromLocation(lastKnownLocationGPS.getLatitude(), lastKnownLocationGPS.getLongitude());
+                } else {
+                    Location loc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    Log.d("positions", loc.getLatitude()+" -- "+loc.getLongitude());
+
+                    getAddressFromLocation(loc.getLatitude(), loc.getLongitude());
+                }
+            }
+        }
+        else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{ACCESS_FINE_LOCATION}, 100);
+            }
+        }
+
+
         profileViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -60,6 +133,65 @@ public class ProfileFragment extends Fragment {
         });
         return root;
     }
+
+
+    private void getAddressFromLocation(double latitude, double longitude) {
+
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+            if (addresses.size() > 0) {
+                Address fetchedAddress = addresses.get(0);
+
+                user.setAdresse(fetchedAddress.getAddressLine(0));
+                location.setText(user.getAdresse());
+
+            }else{
+                user.setAdresse(latitude+", "+longitude);
+                location.setText(user.getAdresse());
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Could not get address..!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.d("permission", "Dedans"+Build.VERSION_CODES.M+"<>"+Build.VERSION.SDK_INT);
+
+            requestPermissions(new String[]{READ_PHONE_STATE}, 100);
+        }
+        else{
+            Log.d("permission", Build.VERSION_CODES.M+"<>"+Build.VERSION.SDK_INT);
+        }
+    }
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 100:
+                TelephonyManager tMgr = (TelephonyManager)  getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                if (ActivityCompat.checkSelfPermission(getContext(), READ_SMS) !=
+                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
+                        READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED  &&
+                        ActivityCompat.checkSelfPermission(getContext(), READ_PHONE_STATE) !=      PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                String mPhoneNumber = tMgr.getLine1Number();
+
+                user.setTel(mPhoneNumber);
+                String uid = FirebaseAuth.getInstance().getUid();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                DatabaseReference usersRef = ref.child(uid + "/account");
+                usersRef.setValue(user);
+                break;
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -73,28 +205,51 @@ public class ProfileFragment extends Fragment {
     {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
-        if(requestCode==2)
-        {
+        if(requestCode==2) {
             user = data.getParcelableExtra("user");
             ImageView avatar = root.findViewById(R.id.avatar);
-            if(user.getProfileImage() != null && !user.getProfileImage().equals("")) {
+            if (user.getProfileImage() != null && !user.getProfileImage().equals("")) {
                 Picasso.get().load(user.getProfileImage()).into(avatar);
             }
    /*     avatar.setImageURI(null);
         avatar.setImageURI(Uri.parse(user.getProfileImage()));*/
-            Log.d("user", "On Resume : "+Uri.parse(user.getProfileImage()) + "");
+            Log.d("user", "On Resume : " + Uri.parse(user.getProfileImage()) + "");
+            if (user.getTel().equals("")) {
+
+                TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (getContext().checkSelfPermission(READ_SMS) != PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    Activity#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for Activity#requestPermissions for more details.
+                        return;
+                    }
+                }
+                String mPhoneNumber = tMgr.getLine1Number();
+                user.setTel(mPhoneNumber);
+                String uid = FirebaseAuth.getInstance().getUid();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                DatabaseReference usersRef = ref.child(uid + "/account");
+                usersRef.setValue(user);
+
+            }
             final TextView pseudo = root.findViewById(R.id.profile_pnom);
             final TextView tel = root.findViewById(R.id.profile_tel);
             final TextView location = root.findViewById(R.id.profile_location);
             profileViewModel.getText().observe(this, new Observer<String>() {
                 @Override
                 public void onChanged(@Nullable String s) {
-                    pseudo.setText(user.getPseudo());
-                    tel.setText(user.getTel());
-                    location.setText(user.getAdresse());
+                pseudo.setText(user.getPseudo());
+                tel.setText(user.getTel());
+                location.setText(user.getAdresse());
 //                avatar.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/gotoesig-50c46.appspot.com/o/images%2F53326439-e77d-41cc-81b6-ace6bf45612f?alt=media&token=f6e89453-36a6-4488-aeb7-a3e9b5331247"));
                 }
             });
+
         }
     }
 

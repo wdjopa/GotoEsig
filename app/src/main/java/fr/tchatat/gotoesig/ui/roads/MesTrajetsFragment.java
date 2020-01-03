@@ -5,22 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,22 +21,25 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import fr.tchatat.gotoesig.Global;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.TrajetAdapter;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
-import fr.tchatat.gotoesig.models.User;
 import fr.tchatat.gotoesig.models.UserTrajet;
 
 public class MesTrajetsFragment extends Fragment {
 
     private MesTrajetsViewModel mesTrajetsViewModel;
-    RecyclerView listeTrajets;
-    TrajetAdapter listeTrajetsAdapter;
-    ArrayList<TrajetCard> trajets = new ArrayList<TrajetCard>();
+    RecyclerView listeTrajetsTermines, listeTrajetsEnCours;
+    TrajetAdapter listeTrajetsAdapterTermines, listeTrajetsAdapterEnCours;
+    ArrayList<TrajetCard> trajetsTermines = new ArrayList<>();
+    ArrayList<TrajetCard> trajetsEnCours = new ArrayList<>();
     Global vars;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,12 +63,24 @@ public class MesTrajetsFragment extends Fragment {
 
         trajets.add(new TrajetCard(vars.getUser(), test));
 */
-        listeTrajets = root.findViewById(R.id.trajets_list);
-        listeTrajetsAdapter = new TrajetAdapter(getActivity(), trajets);
+        listeTrajetsTermines = root.findViewById(R.id.trajets_list_termines);
+        listeTrajetsAdapterTermines = new TrajetAdapter(getActivity(), trajetsTermines);
 
-        listeTrajets.setLayoutManager(new LinearLayoutManager(getActivity()));
-        listeTrajets.setAdapter(listeTrajetsAdapter);
+        listeTrajetsTermines.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listeTrajetsTermines.setAdapter(listeTrajetsAdapterTermines);
 
+
+        listeTrajetsEnCours= root.findViewById(R.id.trajets_list_en_cours);
+        listeTrajetsAdapterEnCours= new TrajetAdapter(getActivity(), trajetsEnCours);
+
+        listeTrajetsEnCours.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listeTrajetsEnCours.setAdapter(listeTrajetsAdapterEnCours);
+
+        listeTrajetsTermines.setVisibility(View.GONE);
+        root.findViewById(R.id.emptyTermines).setVisibility(View.VISIBLE);
+
+        listeTrajetsEnCours.setVisibility(View.GONE);
+        root.findViewById(R.id.emptyEnCours).setVisibility(View.VISIBLE);
 
         ValueEventListener userListener = new ValueEventListener() {
             @Override
@@ -92,13 +100,33 @@ public class MesTrajetsFragment extends Fragment {
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     Trajet trajet = dataSnapshot.getValue(Trajet.class);
                                     if(trajet != null){
-
-                                        Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
-                                        trajets.add(new TrajetCard(vars.getUser(), trajet));
-                                        Log.w("Liste des trajets", trajets.toString());
-                                        listeTrajets.scrollToPosition(trajets.size() );
-                                        listeTrajetsAdapter.notifyItemInserted(trajets.size());
-                                        listeTrajetsAdapter.notifyDataSetChanged();
+                                        String dtStart = trajet.getDate()+"T"+trajet.getHeure()+"Z";
+                                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
+                                        try {
+                                            Date date = format.parse(dtStart);
+                                            if(new Date().after(date)){
+                                                Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                                                trajetsTermines.add(new TrajetCard(vars.getUser(), trajet));
+                                                listeTrajetsTermines.setVisibility(View.VISIBLE);
+                                                root.findViewById(R.id.emptyTermines).setVisibility(View.GONE);
+                                                Log.w("Liste des trajets", trajetsTermines.toString());
+                                                listeTrajetsTermines.scrollToPosition(trajetsTermines.size() );
+                                                listeTrajetsAdapterTermines.notifyItemInserted(trajetsTermines.size());
+                                                listeTrajetsAdapterTermines.notifyDataSetChanged();
+                                            }
+                                            else{
+                                                Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                                                trajetsEnCours.add(new TrajetCard(vars.getUser(), trajet));
+                                                listeTrajetsEnCours.setVisibility(View.VISIBLE);
+                                                root.findViewById(R.id.emptyEnCours).setVisibility(View.GONE);
+                                                Log.w("Liste des trajets", trajetsEnCours.toString());
+                                                listeTrajetsEnCours.scrollToPosition(trajetsEnCours.size() );
+                                                listeTrajetsAdapterEnCours.notifyItemInserted(trajetsEnCours.size());
+                                                listeTrajetsAdapterEnCours.notifyDataSetChanged();
+                                            }
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
 

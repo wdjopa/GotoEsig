@@ -127,6 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
                                         Log.d("userStart", new Gson().toJson(user));
+                                        vars.setUser(user);
                                         updateUI(user);
                                     }
 

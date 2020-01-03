@@ -139,6 +139,6 @@ public class User implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return pseudo;
+        return "pseudo ="+pseudo+"; tel="+tel+"; email ="+email+"; adresse ="+adresse+"; score = "+score;
     }
 }

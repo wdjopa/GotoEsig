@@ -1,8 +1,14 @@
 package fr.tchatat.gotoesig;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +32,7 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
         vars = (Global) getApplicationContext();
+
 
     }
     // [START on_start_check_user]
