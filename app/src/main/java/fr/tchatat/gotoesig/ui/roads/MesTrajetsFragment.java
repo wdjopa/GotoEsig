@@ -68,7 +68,12 @@ public class MesTrajetsFragment extends Fragment {
         trajets.add(new TrajetCard(vars.getUser(), test));
 */
         listeTrajets = root.findViewById(R.id.trajets_list);
-        listeTrajetsAdapter = new TrajetAdapter(getActivity(), trajets);
+        listeTrajetsAdapter = new TrajetAdapter(getActivity(), trajets, new TrajetAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(TrajetCard item) {
+                Toast.makeText(getActivity(), new Gson().toJson(item), Toast.LENGTH_SHORT);
+            }
+        });
 
         listeTrajets.setLayoutManager(new LinearLayoutManager(getActivity()));
         listeTrajets.setAdapter(listeTrajetsAdapter);

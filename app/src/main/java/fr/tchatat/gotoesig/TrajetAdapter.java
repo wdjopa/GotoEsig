@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,9 +22,16 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
     Context c;
     ArrayList<TrajetCard> trajets = new ArrayList<TrajetCard>();
 
-    public TrajetAdapter(Context c, ArrayList<TrajetCard> trajets) {
+    public interface OnItemClickListener {
+        void onItemClick(TrajetCard item);
+    }
+
+    private final OnItemClickListener listener;
+
+    public TrajetAdapter(Context c, ArrayList<TrajetCard> trajets, OnItemClickListener listener) {
         this.c = c;
         this.trajets = trajets;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,6 +43,7 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TrajetHolder holder, int position) {
+        holder.bind(trajets.get(position), listener);
         Picasso.get().load(Uri.parse(trajets.get(position).getUser().getProfileImage())).into(holder.avatar);
         holder.proposer.setText(trajets.get(position).getUser().getPseudo());
         holder.depart.setText(trajets.get(position).getTrajet().getAdresse().toUpperCase());
@@ -43,7 +52,6 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
         if(trajets.get(position).getTrajet().getContribution() > 0)
             holder.contribution.setText(trajets.get(position).getTrajet().getContribution()+"€");
         holder.places.setText(trajets.get(position).total()+"/"+trajets.get(position).getTrajet().getNombre()+" Places");
-
     }
 
     @Override

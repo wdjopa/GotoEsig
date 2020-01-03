@@ -31,4 +31,5 @@
         <item>Oui</item>
         <item>Non</item>
     </string-array>
+    <string name="title_activity_trajet_map">Map</string>
 </resources>

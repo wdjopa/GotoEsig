@@ -257,6 +257,7 @@ public class NouveauTrajetFragment extends Fragment {
                     if(spinnerMoyen.getSelectedItem().toString().equals("Métro")) {
                         mode = "";
                         transit = "rail";
+
                     }
                     if(spinnerMoyen.getSelectedItem().toString().equals("Bus")) {
                         mode = "";
@@ -335,7 +336,7 @@ public class NouveauTrajetFragment extends Fragment {
                 String ret = retard.getText().toString();
                 String places = nbPlaces.getText().toString();
                 String contrib = contribution.getText().toString();
-                final String auto = spinnerAutoroute.getSelectedItem().toString();
+                final String auto = (moyenT.equals("Voiture") ? spinnerAutoroute.getSelectedItem().toString() : "Non");
 
                 if(adresse.matches("") || date.matches("") || heure.matches("") || ret.matches("") || places.matches("") || places.matches("") || (moyenT.equals("Voiture") && contrib.matches(""))){
                     Toast.makeText(getActivity(), "Tous les champs sont obligatoires", Toast.LENGTH_SHORT).show();

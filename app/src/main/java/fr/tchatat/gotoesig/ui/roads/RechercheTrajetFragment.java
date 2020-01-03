@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -37,6 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import fr.tchatat.gotoesig.Global;
+import fr.tchatat.gotoesig.Inscription;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.TrajetAdapter;
 import fr.tchatat.gotoesig.models.Trajet;
@@ -66,13 +68,18 @@ public class RechercheTrajetFragment extends Fragment {
 
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.getValue(Trajet.class);
-                    if (t.getAdresse().contains(adress)) {
+                    if (t.getAdresse().contains(adress.toLowerCase())) {
                         Query userQuery = databaseRef.child("users/"+t.getUid()+"/account");
                         userQuery.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 User u = dataSnapshot.getValue(User.class);
                                 results.add(new TrajetCard(u, t));
+                                Log.d("result", adress);
+                                Log.d("result", new Gson().toJson(results));
+                                resultats.scrollToPosition(results.size());
+                                resultatsAdapter.notifyItemInserted(results.size());
+                                resultatsAdapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -82,11 +89,6 @@ public class RechercheTrajetFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("result", adress);
-                Log.d("result", new Gson().toJson(results));
-                resultats.scrollToPosition(results.size());
-                resultatsAdapter.notifyItemInserted(results.size());
-                resultatsAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -116,9 +118,16 @@ public class RechercheTrajetFragment extends Fragment {
         etDate = root.findViewById(R.id.etDateSearch);
         resultats = root.findViewById(R.id.resultatsRecherche);
 
-        resultatsAdapter = new TrajetAdapter(getActivity(), results);
+        resultatsAdapter = new TrajetAdapter(getActivity(), results, new TrajetAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(TrajetCard item) {
+                Log.d("clic", "Clicked !!!!!!!!!!!!!!!!");
+            }
+        });
         resultats.setLayoutManager(new LinearLayoutManager(getActivity()));
         resultats.setAdapter(resultatsAdapter);
+
+        search("", "");
 
         final Calendar myCalendar = Calendar.getInstance();
 
