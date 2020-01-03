@@ -37,7 +37,7 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
     public void onBindViewHolder(@NonNull TrajetHolder holder, int position) {
         Picasso.get().load(Uri.parse(trajets.get(position).getUser().getProfileImage())).into(holder.avatar);
         holder.proposer.setText(trajets.get(position).getUser().getPseudo());
-        holder.depart.setText(trajets.get(position).getTrajet().getAdresse());
+        holder.depart.setText(trajets.get(position).getTrajet().getAdresse().toUpperCase());
         holder.date.setText(trajets.get(position).getTrajet().getDate());
         holder.mode.setText(trajets.get(position).getTrajet().getMoyen());
         if(trajets.get(position).getTrajet().getContribution() > 0)

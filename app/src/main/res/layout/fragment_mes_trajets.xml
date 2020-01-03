@@ -33,6 +33,7 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/card"
         android:padding="5dp"
+        android:clickable="true"
         app:cardElevation="3dp"
         app:layout_constraintEnd_toEndOf="@+id/text_slideshow"
         app:layout_constraintStart_toStartOf="@+id/text_slideshow"

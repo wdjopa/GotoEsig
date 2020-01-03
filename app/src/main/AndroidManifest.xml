@@ -26,14 +26,9 @@
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_drawer"
-            android:parentActivityName=".AccueilActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="fr.tchatat.gotoesig.AccueilActivity" />
         </activity>
         <activity android:name=".Inscription" />
-        <activity android:name=".AccueilActivity" />
         <activity android:name=".LoginActivity">
 
         </activity>
