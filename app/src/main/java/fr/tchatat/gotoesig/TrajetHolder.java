@@ -7,6 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import fr.tchatat.gotoesig.models.Trajet;
+import fr.tchatat.gotoesig.models.TrajetCard;
+
 
 public class TrajetHolder extends RecyclerView.ViewHolder {
 
@@ -23,5 +26,13 @@ public class TrajetHolder extends RecyclerView.ViewHolder {
         this.mode = itemView.findViewById(R.id.myroads_current_departure_mode_1);
         this.contribution = itemView.findViewById(R.id.myroads_current_departure_price_1);
         this.proposer = itemView.findViewById(R.id.myroads_current_departure_username_1);
+    }
+
+    public void bind(final TrajetCard item, final TrajetAdapter.OnItemClickListener listener) {
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                listener.onItemClick(item);
+            }
+        });
     }
 }
