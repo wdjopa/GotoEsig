@@ -12,7 +12,7 @@
         android:layout_marginBottom="50sp"
         android:background="@color/back"
         android:paddingBottom="50sp"
-        tools:context=".MainActivity">
+        tools:context=".LoginActivity">
 
         <ImageView
             android:id="@+id/imageView"

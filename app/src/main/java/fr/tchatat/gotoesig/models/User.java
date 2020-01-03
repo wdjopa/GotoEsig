@@ -3,6 +3,8 @@ package fr.tchatat.gotoesig.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
+
 public class User implements Parcelable {
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
@@ -132,5 +134,11 @@ public class User implements Parcelable {
         dest.writeInt(score);
         dest.writeString(tel);
         dest.writeString(adresse);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return pseudo;
     }
 }

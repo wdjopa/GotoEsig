@@ -26,7 +26,7 @@ public class AjoutTrajet extends AppCompatActivity{
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent accueil = new Intent(AjoutTrajet.this, MainActivity.class);
+                    Intent accueil = new Intent(AjoutTrajet.this, LoginActivity.class);
                     startActivity(accueil);
                 }
             });

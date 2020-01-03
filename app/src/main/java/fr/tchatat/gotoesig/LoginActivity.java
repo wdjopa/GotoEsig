@@ -14,12 +14,9 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthActionCodeException;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,20 +25,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
 import fr.tchatat.gotoesig.models.User;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private String TAG = "connexion";
     private Button inscription, connexion;
-// ...
+    private Global vars;
+
+    // ...
 // Initialize Firebase Auth
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        vars = (Global) getApplicationContext();
+
 
         inscription = findViewById(R.id.btnRegister);
         inscription.setOnClickListener(this);
@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
                     Log.d("userStart", new Gson().toJson(user));
+                    vars.setUser(user);
                     updateUI(user);
                 }
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         } else {
 
-            Intent accueil = new Intent(MainActivity.this, HomeActivity.class);
+            Intent accueil = new Intent(LoginActivity.this, HomeActivity.class);
             accueil.putExtra("user", user);
             startActivity(accueil);
         }
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
 
-                                Toast.makeText(MainActivity.this, "Authentication failed.",
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
 
@@ -159,21 +160,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
-/*
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Gson gson = new Gson();
-        String currentUserJson = gson.toJson(currentUser);
-        if (currentUser != null) {
-
-            Intent home = new Intent(this, HomeActivity.class);
-            startActivity(home);
-            Toast.makeText(this, "Déjà connecté", Toast.LENGTH_SHORT).show();
-        }
-        Log.d("Connexion", currentUserJson);
-//        updateUI(currentUser);
-    }*/
 }
