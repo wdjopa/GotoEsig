@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,13 +29,17 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import fr.tchatat.gotoesig.Global;
 import fr.tchatat.gotoesig.R;
+import fr.tchatat.gotoesig.TrajetAdapter;
 import fr.tchatat.gotoesig.models.Trajet;
+import fr.tchatat.gotoesig.models.TrajetCard;
 
 public class RechercheTrajetFragment extends Fragment {
 
@@ -42,24 +47,25 @@ public class RechercheTrajetFragment extends Fragment {
 
     private EditText etPoint;
     private EditText etDate;
-    private Button chercher;
+    private RecyclerView resultats;
+    private TrajetAdapter resultatsAdapter;
+    Global vars;
 
-    private ArrayList<Trajet> search(final String adress, String date){
+    private ArrayList<TrajetCard> search(final String adress, String date){
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         Query trajetsQuery = databaseRef.child("trajets");
         if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("date").equalTo(date);
 
+        final ArrayList<TrajetCard> trajets = new ArrayList<TrajetCard>();
         trajetsQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Trajet> trajets = new ArrayList<Trajet>();
 
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     Trajet t = trajet.getValue(Trajet.class);
-                    if (t.getAdresse().contains(adress)) trajets.add(t);
+                    if (t.getAdresse().contains(adress)) trajets.add(new TrajetCard(vars.getUser(), t));
                 }
                 Log.d("result", adress);
-
                 Log.d("result", new Gson().toJson(trajets));
             }
 
@@ -69,7 +75,7 @@ public class RechercheTrajetFragment extends Fragment {
             }
         });
 
-        return null;
+        return trajets;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -85,9 +91,11 @@ public class RechercheTrajetFragment extends Fragment {
             }
         });*/
 
+        vars = (Global) getActivity().getApplicationContext();
+
         etPoint = root.findViewById(R.id.etPointSearch);
         etDate = root.findViewById(R.id.etDateSearch);
-        chercher = root.findViewById(R.id.chercherBtn);
+        resultats = root.findViewById(R.id.resultatsRecherche);
 
         final Calendar myCalendar = Calendar.getInstance();
 
@@ -103,7 +111,11 @@ public class RechercheTrajetFragment extends Fragment {
                 String myFormat = "dd/MM/yyyy";
                 SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
                 etDate.setText(sdf.format(myCalendar.getTime()));
-                search(etPoint.getText().toString(), etDate.getText().toString());
+                ArrayList<TrajetCard> results =  search(etPoint.getText().toString(), etDate.getText().toString());
+                resultatsAdapter = new TrajetAdapter(getActivity(), results);
+                resultats.scrollToPosition(results.size() );
+                resultatsAdapter.notifyItemInserted(results.size());
+                resultatsAdapter.notifyDataSetChanged();
             }
 
         };
@@ -118,7 +130,11 @@ public class RechercheTrajetFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
                 //Log.d("result", etPoint.getText().toString());
-                search(etPoint.getText().toString(), etDate.getText().toString());
+                ArrayList<TrajetCard> results =  search(etPoint.getText().toString(), etDate.getText().toString());
+                resultatsAdapter = new TrajetAdapter(getActivity(), results);
+                resultats.scrollToPosition(results.size() );
+                resultatsAdapter.notifyItemInserted(results.size());
+                resultatsAdapter.notifyDataSetChanged();
             }
         });
 
@@ -130,13 +146,6 @@ public class RechercheTrajetFragment extends Fragment {
                 new DatePickerDialog(getActivity(), datePick, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-        chercher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
             }
         });
 
