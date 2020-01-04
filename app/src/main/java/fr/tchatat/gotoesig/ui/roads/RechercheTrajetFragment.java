@@ -51,6 +51,7 @@ import fr.tchatat.gotoesig.models.GlobalTrajet;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
 import fr.tchatat.gotoesig.models.User;
+import java.text.Normalizer;
 
 public class RechercheTrajetFragment extends Fragment  {
 
@@ -66,6 +67,13 @@ public class RechercheTrajetFragment extends Fragment  {
     private ProgressDialog dialog;
 
     Global vars;
+
+    public static String stripAccents(String s)
+    {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return s;
+    }
 
     private void search(final String adress, String date){
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
@@ -83,9 +91,7 @@ public class RechercheTrajetFragment extends Fragment  {
 
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
-                    final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
-
-                    if (t.getAdresse().contains(adress.toLowerCase())) {
+                    if (stripAccents(t.getAdresse()).contains(stripAccents(adress.toLowerCase()))) {
                         Query userQuery = databaseRef.child("users/"+t.getUid()+"/account");
                         userQuery.addValueEventListener(new ValueEventListener() {
                             @Override
