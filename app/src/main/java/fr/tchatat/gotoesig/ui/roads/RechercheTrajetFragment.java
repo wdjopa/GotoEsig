@@ -125,9 +125,6 @@ public class RechercheTrajetFragment extends Fragment  {
             }
         });*/
 
-        Intent register = new Intent(getActivity(), TrajetMap.class);
-        startActivity(register);
-
         vars = (Global) getActivity().getApplicationContext();
 
         etPoint = root.findViewById(R.id.etPointSearch);
