@@ -91,6 +91,8 @@ public class RechercheTrajetFragment extends Fragment  {
 
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
+                    final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
+
                     if (stripAccents(t.getAdresse()).contains(stripAccents(adress.toLowerCase()))) {
                         Query userQuery = databaseRef.child("users/"+t.getUid()+"/account");
                         userQuery.addValueEventListener(new ValueEventListener() {
