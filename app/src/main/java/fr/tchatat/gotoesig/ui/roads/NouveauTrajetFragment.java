@@ -143,7 +143,7 @@ public class NouveauTrajetFragment extends Fragment {
                                         String id = String.valueOf(System.currentTimeMillis());
 
                                         DatabaseReference trajetsRef = ref.child(id);
-                                        DatabaseReference usersRef = ref2.child(uid + "/trajets/" +id);
+                                        DatabaseReference usersRef = ref2.child(uid + "/trajets/" +id+"/trajet");
                                         Trajet trajet = new Trajet();
                                         trajet.setAdresse(adresse.toLowerCase().trim());
                                         trajet.setAutoroute(auto);

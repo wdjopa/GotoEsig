@@ -3,8 +3,10 @@ package fr.tchatat.gotoesig;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -100,9 +102,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(register);
         } else if (view == connexion) {
             Log.d(TAG, "Connexion");
-
             String email = ((EditText) findViewById(R.id.etEmailConnexion)).getText().toString();
             String password = ((EditText) findViewById(R.id.etPassConnexion)).getText().toString();
+
+            final ProgressDialog dialog = ProgressDialog.show(LoginActivity.this, "","Connexion en cours ..." , true);
+            dialog.show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {public void run() {}}, 3000);
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
@@ -111,6 +118,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             String errorMessage = e.getMessage();
                             Log.d(TAG, errorCode);
                             Log.d(TAG, errorMessage);
+                            Toast.makeText(vars, errorMessage, Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+
                         }
                     })
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -127,6 +137,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
                                         Log.d("userStart", new Gson().toJson(user));
+                                        vars.setUser(user);
+                                        dialog.dismiss();
                                         updateUI(user);
                                     }
 
@@ -147,6 +159,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 } catch(Exception e) {
                                     Log.e(TAG, e.getMessage());
                                 }
+                                dialog.dismiss();
+
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
 

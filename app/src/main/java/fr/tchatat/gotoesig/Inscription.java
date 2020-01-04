@@ -28,10 +28,13 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
     private String TAG = "Inscription";
     private String email = null;
     private String pseudo = null;
+    private Global vars;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inscription);
+        vars = (Global) getApplicationContext();
 
         findViewById(R.id.btnValidateInscription).setOnClickListener(this);
         findViewById(R.id.btnConnect).setOnClickListener(this);
@@ -67,6 +70,7 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
                             users.put(uid, user);
 
                             usersRef.setValue(user);
+                            vars.setUser(user);
 
                             updateUI(user);
                         } else {
