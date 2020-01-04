@@ -1,6 +1,9 @@
 package fr.tchatat.gotoesig.ui.roads;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,9 +45,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.Gson;
 
 import fr.tchatat.gotoesig.HttpConnection;
 import fr.tchatat.gotoesig.R;
+import fr.tchatat.gotoesig.models.Notification;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
 
@@ -119,6 +127,19 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 DatabaseReference participantRef = trajetsRef.child("participants/" + uid);
                                                 participantRef.setValue(uid);
+                                                DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("/users/"+t.getUid()+"/token");
+                                                tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        String token = dataSnapshot.getValue().toString();
+                                                        sendPost(token);
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
                                             }
                                         })
                                         .setNegativeButton(android.R.string.no, null)
@@ -141,7 +162,44 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
 
         fm.getMapAsync(this);
     }
+    public void sendPost(final String token) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String urlAdress = "https://fcm.googleapis.com/fcm/send";
+                    URL url = new URL(urlAdress);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
+                    conn.setRequestProperty("Accept","application/json");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
 
+                    JSONObject jsonParam = new JSONObject();
+                    jsonParam.put("to", token);
+                    jsonParam.put("notification", new Gson().toJson(new Notification("Réservation - GotoESIG","Votre trajet du "+tCard.getTrajet().getDate()+"a été réservé par "+tCard.getUser().getPseudo())));
+
+                    Log.i("JSON", jsonParam.toString());
+                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+                    os.writeBytes(jsonParam.toString());
+
+                    os.flush();
+                    os.close();
+
+                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                    Log.i("MSG" , conn.getResponseMessage());
+
+                    conn.disconnect();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+    }
     private String getMapsApiDirectionsUrl() {
         String mode = "&mode=";
         String transit = "&transit_mode=";
