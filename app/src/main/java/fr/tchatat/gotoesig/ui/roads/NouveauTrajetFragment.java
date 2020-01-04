@@ -142,8 +142,8 @@ public class NouveauTrajetFragment extends Fragment {
                                         DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("/users");
                                         String id = String.valueOf(System.currentTimeMillis());
 
-                                        DatabaseReference trajetsRef = ref.child(id);
-                                        DatabaseReference usersRef = ref2.child(uid + "/trajets/" +id+"/trajet");
+                                        DatabaseReference trajetsRef = ref.child(id+"/trajet");
+                                        DatabaseReference usersRef = ref2.child(uid + "/trajets/" +id);
                                         Trajet trajet = new Trajet();
                                         trajet.setAdresse(adresse.toLowerCase().trim());
                                         trajet.setAutoroute(auto);
@@ -251,7 +251,6 @@ public class NouveauTrajetFragment extends Fragment {
                 if(spinnerMoyen.getSelectedItem().toString().equals("Voiture")){
                     voiturelayout.setVisibility(ConstraintLayout.VISIBLE);
                     mode = "driving";
-                    transit = "";
                 }
                 else {
                     voiturelayout.setVisibility(ConstraintLayout.GONE);
