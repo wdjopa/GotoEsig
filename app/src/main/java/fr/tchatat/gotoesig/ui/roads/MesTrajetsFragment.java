@@ -1,5 +1,6 @@
 package fr.tchatat.gotoesig.ui.roads;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,7 +66,7 @@ public class MesTrajetsFragment extends Fragment {
 */
 
         listeTrajetsTermines = root.findViewById(R.id.trajets_list_termines);
-        listeTrajetsAdapterTermines = new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapter.OnItemClickListener() {
+        listeTrajetsAdapterTermines = new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapter.onClickInterface() {
             @Override
             public void onItemClick(TrajetCard item) {
                 Toast.makeText(getActivity(), new Gson().toJson(item), Toast.LENGTH_SHORT);
@@ -77,15 +78,29 @@ public class MesTrajetsFragment extends Fragment {
 
 
         listeTrajetsEnCours= root.findViewById(R.id.trajets_list_en_cours);
-        listeTrajetsAdapterEnCours= new TrajetAdapter(getActivity(), trajetsEnCours, new TrajetAdapter.OnItemClickListener() {
+        listeTrajetsAdapterEnCours= new TrajetAdapter(getActivity(), trajetsEnCours, new TrajetAdapter.onClickInterface() {
             @Override
             public void onItemClick(TrajetCard item) {
+                Intent intent = new Intent(getActivity(), TrajetMap.class);
+                intent.putExtra("trajet", item);
+                startActivity(intent);
                 Toast.makeText(getActivity(), new Gson().toJson(item), Toast.LENGTH_SHORT);
             }
         });
 
         listeTrajetsEnCours.setLayoutManager(new LinearLayoutManager(getActivity()));
         listeTrajetsEnCours.setAdapter(listeTrajetsAdapterEnCours);
+
+
+        listeTrajetsAdapterTermines= new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapter.onClickInterface() {
+            @Override
+            public void onItemClick(TrajetCard item) {
+                Intent intent = new Intent(getActivity(), TrajetMap.class);
+                intent.putExtra("trajet", item);
+                startActivity(intent);
+                Toast.makeText(getActivity(), "Ce trajet est terminé", Toast.LENGTH_SHORT);
+            }
+        });
 
         listeTrajetsTermines.setVisibility(View.GONE);
         root.findViewById(R.id.emptyTermines).setVisibility(View.VISIBLE);

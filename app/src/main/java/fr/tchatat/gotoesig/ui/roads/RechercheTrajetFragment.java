@@ -2,6 +2,7 @@ package fr.tchatat.gotoesig.ui.roads;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -45,7 +46,7 @@ import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
 import fr.tchatat.gotoesig.models.User;
 
-public class RechercheTrajetFragment extends Fragment {
+public class RechercheTrajetFragment extends Fragment  {
 
     private RechercherTrajetViewModel rechercherTrajetViewModel;
 
@@ -54,6 +55,8 @@ public class RechercheTrajetFragment extends Fragment {
     private RecyclerView resultats;
     private TrajetAdapter resultatsAdapter;
     private ArrayList<TrajetCard> results = new ArrayList<TrajetCard>();
+    private TrajetAdapter.onClickInterface onclickInterface;
+
     Global vars;
 
     private void search(final String adress, String date){
@@ -118,10 +121,13 @@ public class RechercheTrajetFragment extends Fragment {
         etDate = root.findViewById(R.id.etDateSearch);
         resultats = root.findViewById(R.id.resultatsRecherche);
 
-        resultatsAdapter = new TrajetAdapter(getActivity(), results, new TrajetAdapter.OnItemClickListener() {
+        resultatsAdapter = new TrajetAdapter(getActivity(), results, new TrajetAdapter.onClickInterface() {
             @Override
             public void onItemClick(TrajetCard item) {
-                Log.d("clic", "Clicked !!!!!!!!!!!!!!!!");
+                Intent intent = new Intent(getActivity(), TrajetMap.class);
+                intent.putExtra("trajet", item);
+                startActivity(intent);
+                Toast.makeText(getActivity(),item.toString(),Toast.LENGTH_LONG).show();
             }
         });
         resultats.setLayoutManager(new LinearLayoutManager(getActivity()));

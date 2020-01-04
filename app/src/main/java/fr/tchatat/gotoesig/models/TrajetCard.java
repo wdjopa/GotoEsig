@@ -1,13 +1,33 @@
 package fr.tchatat.gotoesig.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-public class TrajetCard {
+public class TrajetCard implements Parcelable {
     private Trajet trajet;
     private User user;
     private ArrayList<User> users = new ArrayList<User>();
+
+    protected TrajetCard(Parcel in) {
+        user = in.readParcelable(User.class.getClassLoader());
+        users = in.createTypedArrayList(User.CREATOR);
+    }
+
+    public static final Creator<TrajetCard> CREATOR = new Creator<TrajetCard>() {
+        @Override
+        public TrajetCard createFromParcel(Parcel in) {
+            return new TrajetCard(in);
+        }
+
+        @Override
+        public TrajetCard[] newArray(int size) {
+            return new TrajetCard[size];
+        }
+    };
 
     public Trajet getTrajet() {
         return trajet;
@@ -46,5 +66,16 @@ public class TrajetCard {
     @Override
     public String toString() {
         return "Trajet de "+trajet.getAdresse()+", le "+trajet.getDate()+" à "+trajet.getHeure()+". Créé par "+user.getPseudo();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(user, flags);
+        dest.writeTypedList(users);
     }
 }
