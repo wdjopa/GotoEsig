@@ -63,7 +63,7 @@ public class RechercheTrajetFragment extends Fragment  {
     private TrajetAdapter resultatsAdapter;
     private ArrayList<TrajetCard> results = new ArrayList<TrajetCard>();
     private TrajetAdapter.onClickInterface onclickInterface;
-    private Handler handler = new Handler();
+    private Handler handler;
     private ProgressDialog dialog;
 
     Global vars;
@@ -80,8 +80,9 @@ public class RechercheTrajetFragment extends Fragment  {
         Query trajetsQuery = databaseRef.child("trajets");
         results.clear();
         if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("date").equalTo(date);
-        dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true);
+        dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true,true);
         dialog.show();
+        handler = new Handler();
         handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
         }}, 3000);
         trajetsQuery.addValueEventListener(new ValueEventListener() {
