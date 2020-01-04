@@ -72,7 +72,10 @@ public class RechercheTrajetFragment extends Fragment  {
         Query trajetsQuery = databaseRef.child("trajets");
         results.clear();
         if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("date").equalTo(date);
-
+        dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true);
+        dialog.show();
+        handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
+        }}, 3000);
         trajetsQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -108,6 +111,7 @@ public class RechercheTrajetFragment extends Fragment  {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
+                                dialog.dismiss();
 
                             }
                         });
@@ -120,6 +124,7 @@ public class RechercheTrajetFragment extends Fragment  {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                dialog.dismiss();
 
             }
         });
@@ -157,10 +162,7 @@ public class RechercheTrajetFragment extends Fragment  {
         resultats.setLayoutManager(new LinearLayoutManager(getActivity()));
         resultats.setAdapter(resultatsAdapter);
 
-        dialog = ProgressDialog.show(getActivity(), "","Récupération des données ..." , true);
-        dialog.show();
-        handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
-        }}, 3000);
+
         search("", "");
 
         final Calendar myCalendar = Calendar.getInstance();
@@ -193,10 +195,7 @@ public class RechercheTrajetFragment extends Fragment  {
             @Override
             public void afterTextChanged(Editable editable) {
                 //Log.d("result", etPoint.getText().toString());
-                dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true);
-                dialog.show();
-                handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
-                }}, 3000);
+
                 search(etPoint.getText().toString(), etDate.getText().toString());
             }
         });
