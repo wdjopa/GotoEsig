@@ -251,6 +251,7 @@ public class NouveauTrajetFragment extends Fragment {
                 if(spinnerMoyen.getSelectedItem().toString().equals("Voiture")){
                     voiturelayout.setVisibility(ConstraintLayout.VISIBLE);
                     mode = "driving";
+                    transit = "";
                 }
                 else {
                     voiturelayout.setVisibility(ConstraintLayout.GONE);

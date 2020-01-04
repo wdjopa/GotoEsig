@@ -26,7 +26,7 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetHolder> {
         void onItemClick(TrajetCard item);
     }
 
-    private final OnItemClickListener listener;
+    private OnItemClickListener listener;
 
     public TrajetAdapter(Context c, ArrayList<TrajetCard> trajets, OnItemClickListener listener) {
         this.c = c;

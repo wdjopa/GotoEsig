@@ -2,6 +2,7 @@ package fr.tchatat.gotoesig.ui.roads;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -111,6 +112,9 @@ public class RechercheTrajetFragment extends Fragment {
                 textView.setText(s);
             }
         });*/
+
+        Intent register = new Intent(getActivity(), TrajetMap.class);
+        startActivity(register);
 
         vars = (Global) getActivity().getApplicationContext();
 

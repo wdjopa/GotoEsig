@@ -1,123 +1,147 @@
 package fr.tchatat.gotoesig.ui.roads;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import org.json.JSONObject;
+
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import fr.tchatat.gotoesig.HttpConnection;
 import fr.tchatat.gotoesig.R;
+import fr.tchatat.gotoesig.models.Trajet;
 
 public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private ArrayList markerPoints= new ArrayList();
-    private final String key = "AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY";
+    private static final LatLng ESIGELEC= new LatLng(49.3832749,
+            1.0746961);
+    private static LatLng pointDepart;
+
+    private MarkerOptions place1;
+    private MarkerOptions place2;
+
+    GoogleMap googleMap;
+    final String TAG = "PathGoogleMapActivity";
+
+    private Trajet t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trajet_map);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+
+        place2 = new MarkerOptions().position(ESIGELEC).title("ESIGELEC");
+
+        SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
+        Geocoder geocoder = new Geocoder(getBaseContext());
+        List<Address> addresses;
+        try{
+            t = getIntent().getParcelableExtra("trajet");
+            addresses = geocoder.getFromLocationName(t.getAdresse(), 1);
+            if(addresses.size() > 0) {
+                double latitude= addresses.get(0).getLatitude();
+                double longitude= addresses.get(0).getLongitude();
+                pointDepart = new LatLng(latitude, longitude);
+                place1 = new MarkerOptions().position(pointDepart).title(t.getAdresse());
+            }
+        }catch(IOException ioe){
+            Toast.makeText(this, "Une erreur est survenue", Toast.LENGTH_SHORT).show();
+        }
+
+
+        fm.getMapAsync(this);
     }
 
+    private String getMapsApiDirectionsUrl() {
+        String mode = "mode=";
+        String transit = "transit_mode=";
+        String avoid = "";
+        if(t.getMoyen().equals("Voiture") || t.getMoyen().equals("Moto")){
+            mode += "driving";
+            if(t.getAutoroute().equals("Non")) avoid = "avoid=highways";
+        }
+        else {
+            if(t.getMoyen().equals("Métro")) {
+                mode = "";
+            }
+            if(t.getMoyen().equals("Bus")) {
+                mode = "";
+            }
+            if(t.getMoyen().equals("Vélo")){
+                mode += "bicycling";
+            }
+            if(t.getMoyen().equals("Marche")){
+                mode += "Walking";
+            }
+        }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+        String depTime = "";
+        try{
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            Date laDate = (Date)formatter.parse(t.getDate() + " " + t.getTemps() + ":00");
+            depTime = "departure_time=" + String.valueOf(laDate.getTime());
+        }catch(ParseException pe){
+            Toast.makeText(this, "La date n'a pas pu être récupérée correctement", Toast.LENGTH_SHORT).show();
+        }
+
+        String origin = "origin=" + t.getAdresse();
+        String destination = "destination=ESIGELEC, SER, France";
+        String key = "key=AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY";
+        String params = origin + "&" + destination + "&" + mode + "&" + transit + "&" + "&" + depTime + key;
+        String output = "json";
+        String url = "https://maps.googleapis.com/maps/api/directions/"
+                + output + "?" + params;
+        return url;
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        LatLng sydney = new LatLng(-34, 151);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
+        this.googleMap = googleMap;
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
+        googleMap.addMarker(place1);
+        googleMap.addMarker(place2);
 
-                if (markerPoints.size() > 1) {
-                    markerPoints.clear();
-                    mMap.clear();
-                }
+        String url = getMapsApiDirectionsUrl();
+        ReadTask downloadTask = new ReadTask();
+        downloadTask.execute(url);
 
-                // Adding new item to the ArrayList
-                markerPoints.add(latLng);
-
-                // Creating MarkerOptions
-                MarkerOptions options = new MarkerOptions();
-
-                // Setting the position of the marker
-                options.position(latLng);
-
-                if (markerPoints.size() == 1) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                } else if (markerPoints.size() == 2) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                }
-
-                // Add new marker to the Google Map Android API V2
-                mMap.addMarker(options);
-
-                // Checks, whether start and end locations are captured
-                if (markerPoints.size() >= 2) {
-                    LatLng origin = (LatLng) markerPoints.get(0);
-                    LatLng dest = (LatLng) markerPoints.get(1);
-
-                    // Getting URL to the Google Directions API
-                    String url = getDirectionsUrl(origin, dest);
-
-                    DownloadTask downloadTask = new DownloadTask();
-
-                    // Start downloading json data from Google Directions API
-                    downloadTask.execute(url);
-                }
-
-            }
-        });
-
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ESIGELEC,
+                12));
     }
 
-    private class DownloadTask extends AsyncTask<String, Void, String> {
 
+    private class ReadTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... url) {
-
             String data = "";
-
             try {
-                data = downloadUrl(url[0]);
+                HttpConnection http = new HttpConnection();
+                data = http.readUrl(url[0]);
             } catch (Exception e) {
                 Log.d("Background Task", e.toString());
             }
@@ -127,33 +151,25 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-
-            parserTask.execute(result);
-
+            new ParserTask().execute(result);
         }
     }
 
+    private class ParserTask extends
+            AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
-    /**
-     * A class to parse the Google Places in JSON format
-     */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        // Parsing the data in non-ui thread
         @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+        protected List<List<HashMap<String, String>>> doInBackground(
+                String... jsonData) {
 
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
 
             try {
                 jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
-
+                PathJSONParser parser = new PathJSONParser();
                 routes = parser.parse(jObject);
+                Log.d("routes", "routes : "+routes.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -161,16 +177,15 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         }
 
         @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList points = null;
-            PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
+        protected void onPostExecute(List<List<HashMap<String, String>>> routes) {
+            ArrayList<LatLng> points = null;
+            PolylineOptions polyLineOptions = null;
 
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList();
-                lineOptions = new PolylineOptions();
-
-                List<HashMap<String, String>> path = result.get(i);
+            // traversing through routes
+            for (int i = 0; i < routes.size(); i++) {
+                points = new ArrayList<LatLng>();
+                polyLineOptions = new PolylineOptions();
+                List<HashMap<String, String>> path = routes.get(i);
 
                 for (int j = 0; j < path.size(); j++) {
                     HashMap<String, String> point = path.get(j);
@@ -182,77 +197,12 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                     points.add(position);
                 }
 
-                lineOptions.addAll(points);
-                lineOptions.width(12);
-                lineOptions.color(Color.RED);
-                lineOptions.geodesic(true);
-
+                polyLineOptions.addAll(points);
+                polyLineOptions.width(12);
+                polyLineOptions.color(Color.BLUE);
             }
 
-// Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
+            googleMap.addPolyline(polyLineOptions);
         }
-    }
-
-    private String getDirectionsUrl(LatLng origin, LatLng dest) {
-
-        // Origin of route
-        String str_origin = "origin=2 rue Hélène Boucher, 76140,France";
-
-        // Destination of route
-        String str_dest = "destination=ESIGELEC, SER, France";
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-        String mode = "mode=driving";
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode + "&key =" + key;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-
-        return url;
-    }
-
-    /**
-     * A method to download json data from url
-     */
-    private String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try {
-            URL url = new URL(strUrl);
-
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            urlConnection.connect();
-
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb = new StringBuffer();
-
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            data = sb.toString();
-
-            br.close();
-
-        } catch (Exception e) {
-            Log.d("Exception", e.toString());
-        } finally {
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
     }
 }
