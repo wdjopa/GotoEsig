@@ -9,33 +9,43 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class AvisTrajetCard implements Parcelable {
-    private String message;
-    private Date date;
+    private AvisTrajet avis;
     private Trajet trajet;
     private User user;
 
-    public String getMessage() {
-        return message;
+    public AvisTrajet getAvis() {
+        return avis;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setAvis(AvisTrajet avis) {
+        this.avis = avis;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
+    public Trajet getTrajet() {
+        return trajet;
     }
 
     public void setTrajet(Trajet trajet) {
         this.trajet = trajet;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public AvisTrajetCard(AvisTrajet avis, Trajet trajet, User user) {
+        this.avis = avis;
+        this.trajet = trajet;
+        this.user = user;
+    }
+
     protected AvisTrajetCard(Parcel in) {
-        message = in.readString();
+        avis = in.readParcelable(AvisTrajet.class.getClassLoader());
+        trajet = in.readParcelable(Trajet.class.getClassLoader());
         user = in.readParcelable(User.class.getClassLoader());
     }
 
@@ -51,31 +61,6 @@ public class AvisTrajetCard implements Parcelable {
         }
     };
 
-    public String getTrajet() {
-        return message;
-    }
-
-    public void setTrajet(String message) {
-        this.message = message;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public AvisTrajetCard() {
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "Avis de "+user.getPseudo()+", le "+date+" pour le trajet "+trajet.getAdresse()+". Message : "+message;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -83,7 +68,8 @@ public class AvisTrajetCard implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(message);
+        dest.writeParcelable(avis, flags);
+        dest.writeParcelable(trajet, flags);
         dest.writeParcelable(user, flags);
     }
 }

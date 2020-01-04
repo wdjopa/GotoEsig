@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,6 +57,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.setTitle("Modification du profil");
 
 
         profile_picture_btn = findViewById(R.id.ppUpdate);
@@ -140,6 +143,12 @@ public class UpdateProfileActivity extends AppCompatActivity {
         intent.putExtra("user", user);
         setResult(2,intent);
         finish();
+    }
+
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        finish();
+        return true;
     }
 
     private void uploadProfilePicture() {

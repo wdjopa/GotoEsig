@@ -33,15 +33,16 @@ public class AvisAdapter extends RecyclerView.Adapter<AvisAdapter.AvisHolder> {
     @NonNull
     @Override
     public AvisHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.trajetcardview, parent, false);
+        View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.avistrajet, parent, false);
         return new AvisHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AvisHolder holder, final int position) {
+
         Picasso.get().load(Uri.parse(avis.get(position).getUser().getProfileImage())).into(holder.image_avis);
-        holder.message_avis.setText(avis.get(position).getMessage());
-        holder.date_avis.setText("Avis laissé le "+avis.get(position).getDate().toString()+" à "+avis.get(position).getDate().getTime());
+        holder.message_avis.setText(avis.get(position).getAvis().getMessage());
+        holder.date_avis.setText("Avis laissé le "+avis.get(position).getAvis().getDate());
     }
 
     @Override

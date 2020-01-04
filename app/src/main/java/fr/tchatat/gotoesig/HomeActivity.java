@@ -1,8 +1,10 @@
 package fr.tchatat.gotoesig;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +17,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -26,12 +33,21 @@ import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import fr.tchatat.gotoesig.models.AvisTrajet;
+import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.User;
+import fr.tchatat.gotoesig.models.UserTrajet;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private AppBarConfiguration mAppBarConfiguration;
     private User user;
+    private Global vars;
+
+    private Handler handler = new Handler();
+    private ProgressDialog dialog;
+    TextView navScore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +55,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Accueil");
+        vars = (Global)getApplicationContext();
+
 
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
@@ -56,13 +74,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = headerView.findViewById(R.id.nomPrenom);
-        TextView navScore = headerView.findViewById(R.id.pointsHeader);
+        navScore = headerView.findViewById(R.id.pointsHeader);
         ImageView imageAvatar = headerView.findViewById(R.id.profilePicture);
         if(user.getProfileImage() != null && !user.getProfileImage().equals("")){
             Picasso.get().load(user.getProfileImage()).into(imageAvatar);
         }
         navUsername.setText(user.getPseudo());
-        navScore.setText(user.getScore() + " pts");
+        navScore.setText(vars.note + " pts");
+        calculate();
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -77,6 +96,89 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void calculate(){
+
+        dialog = ProgressDialog.show(HomeActivity.this, "","Chargement ..." , true);
+        dialog.show();
+        handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
+        }}, 3000);
+
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                {
+
+
+                    UserTrajet userTrajet = new UserTrajet();
+                    userTrajet.setId(snapshot.child("id").getValue().toString());
+                    if(userTrajet.getId() != null){
+                        vars.trajets++;
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets");
+                        DatabaseReference trajetRef = ref.child(userTrajet.getId());
+
+                        ValueEventListener userListener = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Trajet trajet = dataSnapshot.child("trajet").getValue(Trajet.class);
+                                if(trajet != null){
+                                    vars.montant+=trajet.getContribution();
+                                    for (DataSnapshot lesAvis : dataSnapshot.child("avis").getChildren()) {
+                                        AvisTrajet avis = lesAvis.getValue(AvisTrajet.class);
+
+                                        if(avis != null && trajet.getUid().equals(vars.getUser().getUid())) {
+                                            vars.note+=avis.getNote();
+                                            vars.parmoi++;
+                                            navScore.setText(vars.note + " pts");
+
+                                        }
+                                    }
+                                    dialog.dismiss();
+
+                                }
+                                else{
+                                    dialog.dismiss();
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Getting Post failed, log a message
+                                Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+                                dialog.dismiss();
+
+                                // ...
+                            }
+                        };
+                        trajetRef.addValueEventListener(userListener);
+
+                    }
+                    else{
+                        dialog.dismiss();
+
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
+                dialog.dismiss();
+
+                // ...
+            }
+        };
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+        DatabaseReference usersRef = ref.child(vars.getUser().getUid()+ "/trajets");
+        usersRef.addValueEventListener(userListener);
+    }
 
 
     @Override

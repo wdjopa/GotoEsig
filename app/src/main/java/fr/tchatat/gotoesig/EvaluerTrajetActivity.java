@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +40,7 @@ import fr.tchatat.gotoesig.models.User;
 
 public class EvaluerTrajetActivity extends AppCompatActivity {
     TrajetCard trajet;
-
+    Global vars;
     RecyclerView avisRecycle;
     AvisAdapter avisAdapter;
     ArrayList<AvisTrajetCard> avis= new ArrayList<>();
@@ -46,18 +48,29 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evaluer_trajet);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.setTitle("Evaluer un trajet");
 
+        vars = (Global) getApplicationContext();
         Intent intent = getIntent();
         trajet = intent.getParcelableExtra("trajet");
-        if(intent.getParcelableExtra("type").equals("laisser")){
+        Log.d("extract", intent.getExtras().getString("type").toString());
+        Boolean check = intent.getExtras().getString("type").equals("laisser");
+
+
+        avisRecycle= findViewById(R.id.avis_trajets);
+        avisAdapter = new AvisAdapter(this, avis);
+        avisRecycle.setLayoutManager(new LinearLayoutManager(this));
+        avisRecycle.setAdapter(avisAdapter);
+
+       if(check){
             (findViewById(R.id.ratings_layout)).setVisibility(View.GONE);
             (findViewById(R.id.rating_layout)).setVisibility(View.VISIBLE);
         }
         else{
-            afficherListe();
-            (findViewById(R.id.ratings_layout)).setVisibility(View.VISIBLE);
-            (findViewById(R.id.rating_layout)).setVisibility(View.GONE);
-        }
+
+           afficherListe();
+       }
 
         Picasso.get().load(trajet.getUser().getProfileImage()).into(((ImageView) findViewById(R.id.avatar_user_1_avis)));
         ((TextView) findViewById(R.id.myroads_current_departure_location_1_avis)).setText(trajet.getTrajet().getAdresse());
@@ -75,53 +88,74 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets/"+trajet.getTrajet().getId() + "/avis");
-                AvisTrajet avis = new AvisTrajet(((EditText) findViewById(R.id.avis_message)).getText().toString(), new Date());
-                ref.setValue(avis);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets/"+trajet.getTrajet().getId() + "/avis/");
+                DatabaseReference aRef = ref.child(ref.push().getKey());
+                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'à' hh:mm");
+
+                String dateString = format.format( new Date()   );
+                AvisTrajet avis = new AvisTrajet(((EditText) findViewById(R.id.avis_message)).getText().toString(), dateString,((RatingBar)findViewById(R.id.ratingBar_avis)).getRating(), vars.getUser());
+                aRef.setValue(avis);
                 afficherListe();
+                ((EditText) findViewById(R.id.avis_message)).setText("");
                 Toast.makeText(EvaluerTrajetActivity.this, "Avis enregistré", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+    }
+
+
+
+    public boolean onOptionsItemSelected(MenuItem item){
+        finish();
+      /*  Intent myIntent = new Intent(this, MainActivity.class);
+        startActivityForResult(myIntent, 0);*/
+        return true;
     }
 
     private void afficherListe(){
-        avisRecycle= findViewById(R.id.avis_trajets);
-        avisAdapter = new AvisAdapter(this, avis);
-        avisRecycle.setLayoutManager(new LinearLayoutManager(this));
-        avisRecycle.setAdapter(avisAdapter);
+        (findViewById(R.id.ratings_layout)).setVisibility(View.VISIBLE);
+        (findViewById(R.id.rating_layout)).setVisibility(View.GONE);
 
         DatabaseReference avisRef = FirebaseDatabase.getInstance().getReference("/trajets/"+trajet.getTrajet().getId()+"/avis");
 
         ValueEventListener avisListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Toast.makeText(vars, "cest bio", Toast.LENGTH_SHORT).show();
+                int as= 0;
+                float rating = 0;
                 for (DataSnapshot lesAvis : dataSnapshot.getChildren()) {
-                    AvisTrajet a = lesAvis.getValue(AvisTrajet.class);
-                    if(avis != null){
-//                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
-                        //try {
-/*
-                            Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                    Log.w("Liste des avis2", lesAvis.getValue().toString());
 
-                            avis.add(new AvisTrajet(a));
-                            listeTrajetsEnCours.setVisibility(View.VISIBLE);
-                            root.findViewById(R.id.emptyEnCours).setVisibility(View.GONE);
-                            Log.w("Liste des trajets", avis.toString());
-                            listeTrajetsEnCours.scrollToPosition(avis.size() );
-                            avisAdapter.notifyItemInserted(avis.size());
-                            avisAdapter.notifyDataSetChanged();
-    /*
+                    AvisTrajet a = lesAvis.getValue(AvisTrajet.class);
+                    if(a != null){
+                        Toast.makeText(vars, "cest bio "+as++, Toast.LENGTH_SHORT).show();
+
+                        /* SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
+                        try {
+
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }*/
+
+                        avis.add(new AvisTrajetCard(a, trajet.getTrajet(), a.getUser()));
+                        Log.w("Liste des avis2", avis.toString());
+
+                        rating+=a.getNote();
                     }
                 }
+
+                ((RatingBar)findViewById(R.id.ratingBar_avis_moyen)).setRating(rating/as);
+                avisAdapter.notifyItemInserted(avis.size());
+                avisAdapter.notifyDataSetChanged();
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+                Log.w("Liste des avis", "loadUser:onCancelled", databaseError.toException());
                 // ...
             }
         };

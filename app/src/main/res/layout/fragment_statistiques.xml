@@ -12,6 +12,8 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="52dp"
         android:fontFamily="@font/lato"
         android:text="TRAJETS RÉALISÉS"
         android:textSize="15sp"
@@ -22,50 +24,57 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="35dp"
         android:fontFamily="@font/lato"
         android:text="MONTANT TOTAL PERCU"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintTop_toBottomOf="@+id/trajet_realises" />
 
     <TextView
-        android:id="@+id/textView13"
+        android:id="@+id/nombre_avis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="@font/lato"
         android:text="NOTE MOYENNE (250 Avis)"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/montant_percu" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/trajet_realises"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/lato_bold"
-        android:text="350"
+        android:text="0"
         android:textColor="@color/blue"
         android:textSize="50sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
-        android:id="@+id/textView12"
+        android:id="@+id/montant_percu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
         android:fontFamily="@font/lato_bold"
-        android:text="28,85 €"
+        android:text="0 €"
         android:textColor="@color/blue"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <RatingBar
-        android:id="@+id/ratingBar2"
+        android:id="@+id/note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:layout_constraintStart_toStartOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        android:layout_marginTop="28dp"
+        app:layout_constraintStart_toStartOf="@+id/nombre_avis"
+        app:layout_constraintTop_toBottomOf="@+id/nombre_avis" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,32 +6,45 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
             android:title="@string/menu_home" />
-        <item
-            android:id="@+id/nav_add_road"
-            android:title="@string/menu_add_road" />
-        <item
-            android:id="@+id/nav_my_roads"
-            android:title="@string/menu_roads" />
-        <item
-            android:id="@+id/nav_chercher_trajet"
-            android:title="@string/menu_search_road" />
 
-        <item
-            android:id="@+id/nav_profile"
-            android:title="@string/menu_profile" />
-        <item
-            android:id="@+id/nav_evaluer"
-            android:title="@string/menu_evaluate" />
-        <item
-            android:id="@+id/nav_statistiques"
-            android:title="@string/menu_statistiques" />
+        <item android:title="TRAJETS">
+            <menu>
+
+                <item
+                    android:id="@+id/nav_add_road"
+                    android:icon="@drawable/ic_signpost"
+                    android:title="@string/menu_add_road" />
+                <item
+                    android:id="@+id/nav_my_roads"
+                    android:icon="@drawable/ic_placeholder"
+                    android:title="@string/menu_roads" />
+                <item
+                    android:id="@+id/nav_chercher_trajet"
+                    android:icon="@drawable/ic_search"
+                    android:title="@string/menu_search_road" />
+
+            </menu>
+        </item>
+
     </group>
 
-    <!-- <item android:title="PERSONNEL">
+    <item android:title="PERSONNEL">
          <menu>
 
+             <item
+                 android:id="@+id/nav_profile"
+                 android:icon="@drawable/ic_user"
+                 android:title="@string/menu_profile" />
+             <!-- <item
+                  android:id="@+id/nav_evaluer"
+                  android:title="@string/menu_evaluate" />-->
+             <item
+                 android:id="@+id/nav_statistiques"
+                 android:icon="@drawable/ic_research"
+                 android:title="@string/menu_statistiques" />
          </menu>
-     </item>-->
+     </item>
 
 </menu>

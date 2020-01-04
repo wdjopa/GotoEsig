@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import fr.tchatat.gotoesig.Global;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.User;
 
@@ -64,22 +66,28 @@ public class ProfileFragment extends Fragment {
     private User user;
     private View root;
     private Uri pp = null;
+    private Global vars;
 
     TextView pseudo ;
     TextView tel ;
     TextView location ;
     ImageView avatar;
+    RatingBar note;
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         profileViewModel =
                 ViewModelProviders.of(this).get(ProfileViewModel.class);
+        getActivity().setTitle("Profil");
         setHasOptionsMenu(true);
         root = inflater.inflate(R.layout.fragment_profile, container, false);
+        vars = (Global) getActivity().getApplicationContext();
 
         pseudo = root.findViewById(R.id.profile_pnom);
         tel = root.findViewById(R.id.profile_tel);
         location = root.findViewById(R.id.profile_location);
+        note = root.findViewById(R.id.noteGlobale);
+
 
         Intent intent = getActivity().getIntent();
         user = intent.getParcelableExtra("user");
@@ -150,6 +158,7 @@ public class ProfileFragment extends Fragment {
                 pseudo.setText(user.getPseudo());
                 tel.setText(user.getTel());
                 location.setText(user.getAdresse());
+                note.setRating(vars.note/vars.parmoi);
 //                avatar.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/gotoesig-50c46.appspot.com/o/images%2F53326439-e77d-41cc-81b6-ace6bf45612f?alt=media&token=f6e89453-36a6-4488-aeb7-a3e9b5331247"));
             }
         });
@@ -225,7 +234,9 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onResume() {
+
         super.onResume();
+        getActivity().setTitle("Profil");
 
     }
 
@@ -341,6 +352,7 @@ public class ProfileFragment extends Fragment {
 //            profile_picture_btn.setBackgroundDrawable(bitmapDrawable)
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

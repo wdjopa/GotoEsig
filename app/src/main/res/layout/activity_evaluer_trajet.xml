@@ -151,7 +151,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
-       <!-- <androidx.cardview.widget.CardView
+        <!-- <androidx.cardview.widget.CardView
             android:id="@+id/current_road_avis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -291,10 +291,10 @@
 -->
         <LinearLayout
             android:id="@+id/rating_layout"
-            android:layout_width="366dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="5dp"
+            android:padding="8dp"
             app:layout_constraintEnd_toEndOf="@+id/current_road_avis"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/current_road_avis"
@@ -315,6 +315,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" />
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/lato"
+                android:text="Laisser un avis (facultatif)"
+                android:textColor="@color/blue_text"
+                android:textSize="15sp" />
+
             <EditText
                 android:id="@+id/avis_message"
                 android:layout_width="match_parent"
@@ -327,16 +337,6 @@
                 android:hint="Entrez votre message ici"
                 android:inputType="textMultiLine"
                 android:padding="10dp" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/lato"
-                android:text="Laisser un avis (facultatif)"
-                android:textColor="@color/blue_text"
-                android:textSize="15sp" />
 
             <Button
                 android:id="@+id/button_envoyer_avis"
@@ -352,22 +352,22 @@
 
         <LinearLayout
             android:id="@+id/ratings_layout"
-            android:layout_width="365dp"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="5dp"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/current_road_avis"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/current_road_avis"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/current_road_avis">
 
             <RatingBar
                 android:id="@+id/ratingBar_avis_moyen"
                 android:layout_width="wrap_content"
-                android:isIndicator="true"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:isIndicator="true" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/avis_trajets"

@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RatingBar
-        android:id="@+id/ratingBar3"
+        android:id="@+id/noteGlobale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="@+id/avatar"
         app:layout_constraintHorizontal_bias="0.586"
         app:layout_constraintStart_toStartOf="@+id/avatar"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar3">>
+        app:layout_constraintTop_toBottomOf="@+id/noteGlobale">>
 
         <TextView
             android:id="@+id/profile_pnom"
