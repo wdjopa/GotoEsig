@@ -83,6 +83,8 @@ public class RechercheTrajetFragment extends Fragment  {
 
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
+                    final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
+
                     if (t.getAdresse().contains(adress.toLowerCase())) {
                         Query userQuery = databaseRef.child("users/"+t.getUid()+"/account");
                         userQuery.addValueEventListener(new ValueEventListener() {
@@ -100,7 +102,7 @@ public class RechercheTrajetFragment extends Fragment  {
                                 }
 
                                 if(!(new Date().after(date))){
-                                    results.add(new TrajetCard(u, t));
+                                    results.add(new TrajetCard(u, t, nombre));
                                     Log.d("result", adress);
                                     Log.d("result", new Gson().toJson(results));
                                     resultats.scrollToPosition(results.size());

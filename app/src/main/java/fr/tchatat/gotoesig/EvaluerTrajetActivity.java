@@ -80,7 +80,7 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.myroads_current_departure_price_1_avis)).setText(trajet.getTrajet().getContribution()+"€");
 
         int places = trajet.getTrajet().getNombre();
-        ((TextView) findViewById(R.id.myroads_current_departure_places_1_avis)).setText(trajet.total()+"/"+places+" Place"+(places>1?"s":""));
+        ((TextView) findViewById(R.id.myroads_current_departure_places_1_avis)).setText(trajet.getNombre()+"/"+places+" Place"+(places>1?"s":""));
         ((TextView) findViewById(R.id.myroads_current_departure_username_1_avis)).setText(trajet.getUser().getPseudo());
 
 

@@ -46,6 +46,8 @@ import fr.tchatat.gotoesig.HttpConnection;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
+import fr.tchatat.gotoesig.models.User;
+import fr.tchatat.gotoesig.models.UserTrajet;
 
 public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
 
@@ -119,6 +121,8 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 DatabaseReference participantRef = trajetsRef.child("participants/" + uid);
                                                 participantRef.setValue(uid);
+                                                UserTrajet ut = new UserTrajet(t.getId());
+                                                FirebaseDatabase.getInstance().getReference().child("users/"+uid+"/trajets/"+t.getId()).setValue(ut);
                                             }
                                         })
                                         .setNegativeButton(android.R.string.no, null)

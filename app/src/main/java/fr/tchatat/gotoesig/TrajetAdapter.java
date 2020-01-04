@@ -55,7 +55,7 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetAdapter.TrajetHold
 
         if(trajets.get(position).getTrajet().getContribution() > 0)
             holder.contribution.setText(trajets.get(position).getTrajet().getContribution()+"€");
-        holder.places.setText(trajets.get(position).total()+"/"+trajets.get(position).getTrajet().getNombre()+" Place"+(trajets.get(position).getTrajet().getNombre()>1?"s":""));
+        holder.places.setText(trajets.get(position).getNombre()+"/"+trajets.get(position).getTrajet().getNombre()+" Place"+(trajets.get(position).getTrajet().getNombre()>1?"s":""));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

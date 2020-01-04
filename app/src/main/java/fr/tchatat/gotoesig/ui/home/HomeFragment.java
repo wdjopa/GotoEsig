@@ -36,9 +36,9 @@ public class HomeFragment extends Fragment {
 
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_home_2, container, false);
         getActivity().setTitle("Accueil");
-
+/*
         mesTrajets = root.findViewById(R.id.mesTrajetsBtn);
         mesTrajets.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
             }
         });
         */
-
+/*
         ajoutTrajet = root.findViewById(R.id.propTrajetBtn);
         ajoutTrajet.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
-        });
+        });*/
         return root;
     }
 

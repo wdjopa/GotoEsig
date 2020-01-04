@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +35,7 @@ import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.TrajetAdapter;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
+import fr.tchatat.gotoesig.models.User;
 import fr.tchatat.gotoesig.models.UserTrajet;
 
 public class MesTrajetsFragment extends Fragment {
@@ -122,35 +125,56 @@ public class MesTrajetsFragment extends Fragment {
                             ValueEventListener userListener = new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Trajet trajet = dataSnapshot.child("trajet").getValue(Trajet.class);
+                                    final Trajet trajet = dataSnapshot.child("trajet").getValue(Trajet.class);
+                                    final int nombre = Integer.parseInt(String.valueOf(dataSnapshot.child("participants").getChildrenCount()));
                                     if(trajet != null){
-                                        String dtStart = trajet.getDate()+"T"+trajet.getHeure()+"Z";
-                                        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
-                                        try {
-                                            Date date = format.parse(dtStart);
-                                            if(new Date().after(date)){
-                                                Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
-                                                trajetsTermines.add(new TrajetCard(vars.getUser(), trajet));
-                                                listeTrajetsTermines.setVisibility(View.VISIBLE);
-                                                root.findViewById(R.id.emptyTermines).setVisibility(View.GONE);
-                                                Log.w("Liste des trajets", trajetsTermines.toString());
-                                                listeTrajetsTermines.scrollToPosition(trajetsTermines.size() );
-                                                listeTrajetsAdapterTermines.notifyItemInserted(trajetsTermines.size());
-                                                listeTrajetsAdapterTermines.notifyDataSetChanged();
+                                        String uid = trajet.getUid();
+                                        ValueEventListener userListener = new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                User user = dataSnapshot.getValue(User.class);
+                                                String dtStart = trajet.getDate()+"T"+trajet.getHeure()+"Z";
+                                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
+                                                Date date;
+                                                try {
+                                                    date = format.parse(dtStart);
+                                                    if(new Date().after(date)){
+                                                        Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                                                        trajetsTermines.add(new TrajetCard(user, trajet, nombre));
+                                                        listeTrajetsTermines.setVisibility(View.VISIBLE);
+                                                        root.findViewById(R.id.emptyTermines).setVisibility(View.GONE);
+                                                        Log.w("Liste des trajets", trajetsTermines.toString());
+                                                        listeTrajetsTermines.scrollToPosition(trajetsTermines.size() );
+                                                        listeTrajetsAdapterTermines.notifyItemInserted(trajetsTermines.size());
+                                                        listeTrajetsAdapterTermines.notifyDataSetChanged();
+                                                    }
+                                                    else{
+                                                        Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                                                        trajetsEnCours.add(new TrajetCard(user, trajet, nombre));
+                                                        listeTrajetsEnCours.setVisibility(View.VISIBLE);
+                                                        root.findViewById(R.id.emptyEnCours).setVisibility(View.GONE);
+                                                        Log.w("Liste des trajets", trajetsEnCours.toString());
+                                                        listeTrajetsEnCours.scrollToPosition(trajetsEnCours.size() );
+                                                        listeTrajetsAdapterEnCours.notifyItemInserted(trajetsEnCours.size());
+                                                        listeTrajetsAdapterEnCours.notifyDataSetChanged();
+                                                    }
+
+                                                } catch (ParseException e) {
+                                                    e.printStackTrace();
+                                                }
+
                                             }
-                                            else{
-                                                Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
-                                                trajetsEnCours.add(new TrajetCard(vars.getUser(), trajet));
-                                                listeTrajetsEnCours.setVisibility(View.VISIBLE);
-                                                root.findViewById(R.id.emptyEnCours).setVisibility(View.GONE);
-                                                Log.w("Liste des trajets", trajetsEnCours.toString());
-                                                listeTrajetsEnCours.scrollToPosition(trajetsEnCours.size() );
-                                                listeTrajetsAdapterEnCours.notifyItemInserted(trajetsEnCours.size());
-                                                listeTrajetsAdapterEnCours.notifyDataSetChanged();
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                // Getting Post failed, log a message
+                                                Log.w("Update", "loadUser:onCancelled", databaseError.toException());
+                                                // ...
                                             }
-                                        } catch (ParseException e) {
-                                            e.printStackTrace();
-                                        }
+                                        };
+                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                                        DatabaseReference usersRef = ref.child(uid + "/account");
+                                        usersRef.addValueEventListener(userListener);
                                     }
                                 }
 
