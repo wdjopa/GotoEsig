@@ -26,11 +26,14 @@
                 android:id="@+id/text_slideshow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/lato"
-                android:text="EN COURS"
+                android:text="@string/mes_trajets_en_cours"
                 android:textAlignment="textStart"
                 android:textColor="#0D3FA0"
-                android:textSize="20dp" />
+                android:textSize="15sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trajets_list_en_cours"
@@ -43,8 +46,12 @@
             <ImageView
                 android:id="@+id/emptyEnCours"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:srcCompat="@drawable/undraw_online_everywhere_cd90" />
+                android:layout_height="100dp"
+                android:layout_marginTop="85dp"
+                android:layout_marginBottom="85dp"
+                android:alpha="0.5"
+                android:contentDescription="@string/aucun_trajet_en_cours"
+                app:srcCompat="@drawable/ic_undraw_online" />
         </LinearLayout>
 
         <LinearLayout
@@ -59,12 +66,13 @@
                 android:id="@+id/text_slideshow2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/lato"
-                android:text="TERMINÉS"
+                android:text="@string/trajets_termin_s"
                 android:textAlignment="textStart"
                 android:textColor="#0D3FA0"
-                android:textSize="20dp" />
+                android:textSize="15sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/trajets_list_termines"
@@ -78,8 +86,12 @@
             <ImageView
                 android:id="@+id/emptyTermines"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:srcCompat="@drawable/undraw_yoga_248n" />
+                android:layout_height="100dp"
+                android:layout_marginTop="85dp"
+                android:layout_marginBottom="85dp"
+                android:alpha="0.5"
+                android:contentDescription="@string/aucun_trajet_termin"
+                app:srcCompat="@drawable/ic_undraw_yoga" />
 
         </LinearLayout>
 

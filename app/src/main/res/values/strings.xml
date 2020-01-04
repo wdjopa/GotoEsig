@@ -32,4 +32,8 @@
         <item>Non</item>
     </string-array>
     <string name="title_activity_trajet_map">Map</string>
+    <string name="aucun_trajet_en_cours">Aucun trajet en cours</string>
+    <string name="mes_trajets_en_cours">Mes trajets en cours</string>
+    <string name="trajets_termin_s">Trajets terminés</string>
+    <string name="aucun_trajet_termin">Aucun trajet terminé</string>
 </resources>
