@@ -11,14 +11,19 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 
@@ -29,6 +34,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import fr.tchatat.gotoesig.HttpConnection;
 import fr.tchatat.gotoesig.R;
@@ -50,12 +62,16 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
     private TrajetCard tCard;
     private Trajet t;
 
+    private Button btnVal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trajet_map);
 
         place2 = new MarkerOptions().position(ESIGELEC).title("ESIGELEC");
+
+        btnVal = findViewById(R.id.btnValCarte);
 
         SupportMapFragment fm = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -76,47 +92,98 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
             Toast.makeText(this, "Une erreur est survenue", Toast.LENGTH_SHORT).show();
         }
 
+        btnVal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String uid = FirebaseAuth.getInstance().getUid();
+                final DatabaseReference trajetsRef = FirebaseDatabase.getInstance().getReference().child("trajets/"+t.getId());
+                final Query participantsQuery = trajetsRef.child("participants");
+                participantsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        int i = 0;
+                        for (DataSnapshot part : dataSnapshot.getChildren()) {
+                            if(part.getValue().toString().equals(uid)){
+                                i = -1;
+                                break;
+                            }
+                            i++;
+                        }
+                        if(i != -1){
+                            if (i < t.getNombre()){
+                                new AlertDialog.Builder(TrajetMap.this)
+                                        .setTitle("Confirmation")
+                                        .setMessage("Reserver ce trajet ?")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                DatabaseReference participantRef = trajetsRef.child("participants/" + uid);
+                                                participantRef.setValue(uid);
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.no, null)
+                                        .show();
+                            }else {
+                                Toast.makeText(TrajetMap.this, "Il n'y a plus de places disponibles pour ce trajet", Toast.LENGTH_SHORT).show();
+                            }
+                        }else {
+                            Toast.makeText(TrajetMap.this, "Vous avez déjà réservé ce trajet", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
 
         fm.getMapAsync(this);
     }
 
     private String getMapsApiDirectionsUrl() {
-        String mode = "mode=";
-        String transit = "transit_mode=";
+        String mode = "&mode=";
+        String transit = "&transit_mode=";
         String avoid = "";
         if(t.getMoyen().equals("Voiture") || t.getMoyen().equals("Moto")){
             mode += "driving";
-            if(t.getAutoroute().equals("Non")) avoid = "avoid=highways";
+            transit = "";
+            if(t.getAutoroute().equals("Non")) avoid = "&avoid=highways";
         }
         else {
             if(t.getMoyen().equals("Métro")) {
-                mode += "rail";
+                transit += "rail";
+                mode = "";
             }
             if(t.getMoyen().equals("Bus")) {
                 transit += "bus";
+                mode = "";
             }
             if(t.getMoyen().equals("Vélo")){
                 mode += "bicycling";
+                transit = "";
             }
             if(t.getMoyen().equals("Marche")){
                 mode += "Walking";
+                transit = "";
             }
         }
 
         String depTime = "";
         try{
             DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-            Log.d("la date", t.getDate() + " " + t.getTemps() + ":00");
-            Date laDate = (Date)formatter.parse(t.getDate() + " " + t.getTemps() + ":00");
-            depTime = "departure_time=" + String.valueOf(laDate.getTime());
+            Log.d("la date", t.getDate() + " " + t.getHeure() + ":00");
+            Date laDate = (Date)formatter.parse(t.getDate() + " " + t.getHeure() + ":00");
+            depTime = "&departure_time=" + String.valueOf(laDate.getTime());
         }catch(ParseException pe){
-            Toast.makeText(this, "La date n'a pas pu être récupérée correctement", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, t.getDate() + " " + t.getHeure() + ":00", Toast.LENGTH_SHORT).show();
         }
 
         String origin = "origin=" + t.getAdresse();
-        String destination = "destination=ESIGELEC, SER, France";
-        String key = "key=AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY";
-        String params = origin + "&" + destination + "&" + mode + "&" + transit + "&" + depTime + "&" + key;
+        String destination = "&destination=ESIGELEC, SER, France";
+        String key = "&key=AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY";
+        String params = origin + destination + mode + transit + depTime + key;
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/"
                 + output + "?" + params;
