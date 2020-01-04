@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import fr.tchatat.gotoesig.HttpConnection;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.Trajet;
+import fr.tchatat.gotoesig.models.TrajetCard;
 
 public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
 
@@ -46,6 +47,7 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
     GoogleMap googleMap;
     final String TAG = "PathGoogleMapActivity";
 
+    private TrajetCard tCard;
     private Trajet t;
 
     @Override
@@ -61,7 +63,8 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         Geocoder geocoder = new Geocoder(getBaseContext());
         List<Address> addresses;
         try{
-            t = getIntent().getParcelableExtra("trajet");
+            tCard = getIntent().getParcelableExtra("trajet");
+            t = tCard.getTrajet();
             addresses = geocoder.getFromLocationName(t.getAdresse(), 1);
             if(addresses.size() > 0) {
                 double latitude= addresses.get(0).getLatitude();
@@ -87,10 +90,10 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         }
         else {
             if(t.getMoyen().equals("Métro")) {
-                mode = "";
+                mode += "rail";
             }
             if(t.getMoyen().equals("Bus")) {
-                mode = "";
+                transit += "bus";
             }
             if(t.getMoyen().equals("Vélo")){
                 mode += "bicycling";
@@ -103,6 +106,7 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         String depTime = "";
         try{
             DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            Log.d("la date", t.getDate() + " " + t.getTemps() + ":00");
             Date laDate = (Date)formatter.parse(t.getDate() + " " + t.getTemps() + ":00");
             depTime = "departure_time=" + String.valueOf(laDate.getTime());
         }catch(ParseException pe){
@@ -112,10 +116,12 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         String origin = "origin=" + t.getAdresse();
         String destination = "destination=ESIGELEC, SER, France";
         String key = "key=AIzaSyCRNIOy2kuxSgiwTkTOEgCetao9-s3uWjY";
-        String params = origin + "&" + destination + "&" + mode + "&" + transit + "&" + "&" + depTime + key;
+        String params = origin + "&" + destination + "&" + mode + "&" + transit + "&" + depTime + "&" + key;
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/"
                 + output + "?" + params;
+
+        Log.d("url", url);
         return url;
     }
 

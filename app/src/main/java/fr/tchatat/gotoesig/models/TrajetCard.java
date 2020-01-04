@@ -12,7 +12,9 @@ public class TrajetCard implements Parcelable {
     private User user;
     private ArrayList<User> users = new ArrayList<User>();
 
+
     protected TrajetCard(Parcel in) {
+        trajet = in.readParcelable(Trajet.class.getClassLoader());
         user = in.readParcelable(User.class.getClassLoader());
         users = in.createTypedArrayList(User.CREATOR);
     }
@@ -74,8 +76,9 @@ public class TrajetCard implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(user, flags);
-        dest.writeTypedList(users);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(trajet, i);
+        parcel.writeParcelable(user, i);
+        parcel.writeTypedList(users);
     }
 }

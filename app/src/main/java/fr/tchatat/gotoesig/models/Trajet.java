@@ -1,6 +1,9 @@
 package fr.tchatat.gotoesig.models;
 
-public class Trajet {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Trajet implements Parcelable {
 
     public Trajet() {}
 
@@ -16,6 +19,33 @@ public class Trajet {
     private float contribution;
     private String distance;
     private String temps;
+
+    protected Trajet(Parcel in) {
+        id = in.readString();
+        uid = in.readString();
+        moyen = in.readString();
+        adresse = in.readString();
+        date = in.readString();
+        heure = in.readString();
+        retard = in.readInt();
+        nombre = in.readInt();
+        autoroute = in.readString();
+        contribution = in.readFloat();
+        distance = in.readString();
+        temps = in.readString();
+    }
+
+    public static final Creator<Trajet> CREATOR = new Creator<Trajet>() {
+        @Override
+        public Trajet createFromParcel(Parcel in) {
+            return new Trajet(in);
+        }
+
+        @Override
+        public Trajet[] newArray(int size) {
+            return new Trajet[size];
+        }
+    };
 
     public String getMoyen() {
         return moyen;
@@ -111,5 +141,26 @@ public class Trajet {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(uid);
+        parcel.writeString(moyen);
+        parcel.writeString(adresse);
+        parcel.writeString(date);
+        parcel.writeString(heure);
+        parcel.writeInt(retard);
+        parcel.writeInt(nombre);
+        parcel.writeString(autoroute);
+        parcel.writeFloat(contribution);
+        parcel.writeString(distance);
+        parcel.writeString(temps);
     }
 }
