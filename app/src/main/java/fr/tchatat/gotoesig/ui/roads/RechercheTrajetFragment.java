@@ -35,9 +35,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import fr.tchatat.gotoesig.Global;
@@ -83,13 +85,25 @@ public class RechercheTrajetFragment extends Fragment  {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 User u = dataSnapshot.getValue(User.class);
-                                results.add(new TrajetCard(u, t));
-                                Log.d("result", adress);
-                                Log.d("result", new Gson().toJson(results));
-                                resultats.scrollToPosition(results.size());
-                                resultatsAdapter.notifyItemInserted(results.size());
-                                resultatsAdapter.notifyDataSetChanged();
-                                dialog.dismiss();
+
+                                String dtStart = t.getDate()+"T"+t.getHeure()+"Z";
+                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
+                                Date date = null;
+                                try {
+                                    date = format.parse(dtStart);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if(!(new Date().after(date))){
+                                    results.add(new TrajetCard(u, t));
+                                    Log.d("result", adress);
+                                    Log.d("result", new Gson().toJson(results));
+                                    resultats.scrollToPosition(results.size());
+                                    resultatsAdapter.notifyItemInserted(results.size());
+                                    resultatsAdapter.notifyDataSetChanged();
+                                    dialog.dismiss();
+                                }
                             }
 
                             @Override
