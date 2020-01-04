@@ -65,18 +65,6 @@ public class MesTrajetsFragment extends Fragment {
         trajets.add(new TrajetCard(vars.getUser(), test));
 */
 
-        listeTrajetsTermines = root.findViewById(R.id.trajets_list_termines);
-        listeTrajetsAdapterTermines = new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapter.onClickInterface() {
-            @Override
-            public void onItemClick(TrajetCard item) {
-                Toast.makeText(getActivity(), new Gson().toJson(item), Toast.LENGTH_SHORT);
-            }
-        });
-
-        listeTrajetsTermines.setLayoutManager(new LinearLayoutManager(getActivity()));
-        listeTrajetsTermines.setAdapter(listeTrajetsAdapterTermines);
-
-
         listeTrajetsEnCours= root.findViewById(R.id.trajets_list_en_cours);
         listeTrajetsAdapterEnCours= new TrajetAdapter(getActivity(), trajetsEnCours, new TrajetAdapter.onClickInterface() {
             @Override
@@ -91,7 +79,7 @@ public class MesTrajetsFragment extends Fragment {
         listeTrajetsEnCours.setLayoutManager(new LinearLayoutManager(getActivity()));
         listeTrajetsEnCours.setAdapter(listeTrajetsAdapterEnCours);
 
-
+        listeTrajetsTermines = root.findViewById(R.id.trajets_list_termines);
         listeTrajetsAdapterTermines= new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapter.onClickInterface() {
             @Override
             public void onItemClick(TrajetCard item) {
@@ -101,12 +89,20 @@ public class MesTrajetsFragment extends Fragment {
                 Toast.makeText(getActivity(), "Ce trajet est terminé", Toast.LENGTH_SHORT);
             }
         });
+        listeTrajetsTermines.setLayoutManager(new LinearLayoutManager(getActivity()));
+        listeTrajetsTermines.setAdapter(listeTrajetsAdapterTermines);
 
-        listeTrajetsTermines.setVisibility(View.GONE);
-        root.findViewById(R.id.emptyTermines).setVisibility(View.VISIBLE);
 
-        listeTrajetsEnCours.setVisibility(View.GONE);
-        root.findViewById(R.id.emptyEnCours).setVisibility(View.VISIBLE);
+        if(trajetsTermines.size()==0){
+            listeTrajetsTermines.setVisibility(View.GONE);
+            root.findViewById(R.id.emptyTermines).setVisibility(View.VISIBLE);
+        }
+
+        if(trajetsEnCours.size()==0) {
+            listeTrajetsEnCours.setVisibility(View.GONE);
+            root.findViewById(R.id.emptyEnCours).setVisibility(View.VISIBLE);
+        }
+
 
         ValueEventListener userListener = new ValueEventListener() {
             @Override

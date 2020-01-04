@@ -1,9 +1,11 @@
 package fr.tchatat.gotoesig.ui.roads;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -40,6 +42,7 @@ import java.util.List;
 
 import fr.tchatat.gotoesig.Global;
 import fr.tchatat.gotoesig.Inscription;
+import fr.tchatat.gotoesig.LoginActivity;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.TrajetAdapter;
 import fr.tchatat.gotoesig.models.Trajet;
@@ -56,6 +59,8 @@ public class RechercheTrajetFragment extends Fragment  {
     private TrajetAdapter resultatsAdapter;
     private ArrayList<TrajetCard> results = new ArrayList<TrajetCard>();
     private TrajetAdapter.onClickInterface onclickInterface;
+    private Handler handler = new Handler();
+    private ProgressDialog dialog;
 
     Global vars;
 
@@ -83,6 +88,7 @@ public class RechercheTrajetFragment extends Fragment  {
                                 resultats.scrollToPosition(results.size());
                                 resultatsAdapter.notifyItemInserted(results.size());
                                 resultatsAdapter.notifyDataSetChanged();
+                                dialog.dismiss();
                             }
 
                             @Override
@@ -90,6 +96,9 @@ public class RechercheTrajetFragment extends Fragment  {
 
                             }
                         });
+                    }
+                    else{
+                        dialog.dismiss();
                     }
                 }
             }
@@ -133,6 +142,10 @@ public class RechercheTrajetFragment extends Fragment  {
         resultats.setLayoutManager(new LinearLayoutManager(getActivity()));
         resultats.setAdapter(resultatsAdapter);
 
+        dialog = ProgressDialog.show(getActivity(), "","Récupération des données ..." , true);
+        dialog.show();
+        handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
+        }}, 3000);
         search("", "");
 
         final Calendar myCalendar = Calendar.getInstance();
@@ -165,6 +178,10 @@ public class RechercheTrajetFragment extends Fragment  {
             @Override
             public void afterTextChanged(Editable editable) {
                 //Log.d("result", etPoint.getText().toString());
+                dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true);
+                dialog.show();
+                handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
+                }}, 3000);
                 search(etPoint.getText().toString(), etDate.getText().toString());
             }
         });
