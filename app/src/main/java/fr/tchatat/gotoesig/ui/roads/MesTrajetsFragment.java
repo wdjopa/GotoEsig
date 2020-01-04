@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import fr.tchatat.gotoesig.EvaluerTrajetActivity;
 import fr.tchatat.gotoesig.Global;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.TrajetAdapter;
@@ -83,8 +84,9 @@ public class MesTrajetsFragment extends Fragment {
         listeTrajetsAdapterTermines= new TrajetAdapter(getActivity(), trajetsTermines, new TrajetAdapter.onClickInterface() {
             @Override
             public void onItemClick(TrajetCard item) {
-                Intent intent = new Intent(getActivity(), TrajetMap.class);
+                Intent intent = new Intent(getActivity(), EvaluerTrajetActivity.class);
                 intent.putExtra("trajet", item);
+                intent.putExtra("type", "laisser");
                 startActivity(intent);
                 Toast.makeText(getActivity(), "Ce trajet est terminé", Toast.LENGTH_SHORT);
             }
@@ -120,7 +122,7 @@ public class MesTrajetsFragment extends Fragment {
                             ValueEventListener userListener = new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    Trajet trajet = dataSnapshot.getValue(Trajet.class);
+                                    Trajet trajet = dataSnapshot.child("trajet").getValue(Trajet.class);
                                     if(trajet != null){
                                         String dtStart = trajet.getDate()+"T"+trajet.getHeure()+"Z";
                                         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");

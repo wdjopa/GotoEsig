@@ -1,9 +1,11 @@
 package fr.tchatat.gotoesig.ui.profile.profile;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -11,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,14 +34,21 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.User;
@@ -53,10 +63,12 @@ public class ProfileFragment extends Fragment {
     private ProfileViewModel profileViewModel;
     private User user;
     private View root;
+    private Uri pp = null;
 
     TextView pseudo ;
     TextView tel ;
     TextView location ;
+    ImageView avatar;
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -71,7 +83,17 @@ public class ProfileFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
         user = intent.getParcelableExtra("user");
-        ImageView avatar = root.findViewById(R.id.avatar);
+        avatar = root.findViewById(R.id.avatar);
+
+        avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, 0);
+
+            }
+        });
         if (user.getProfileImage() != null && !user.getProfileImage().equals("")) {
             Picasso.get().load(user.getProfileImage()).into(avatar);
         }
@@ -147,10 +169,18 @@ public class ProfileFragment extends Fragment {
                 Address fetchedAddress = addresses.get(0);
 
                 user.setAdresse(fetchedAddress.getAddressLine(0));
+                String uid = FirebaseAuth.getInstance().getUid();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                DatabaseReference usersRef = ref.child(uid + "/account");
+                usersRef.setValue(user);
                 location.setText(user.getAdresse());
 
             }else{
                 user.setAdresse(latitude+", "+longitude);
+                String uid = FirebaseAuth.getInstance().getUid();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                DatabaseReference usersRef = ref.child(uid + "/account");
+                usersRef.setValue(user);
                 location.setText(user.getAdresse());
 
             }
@@ -250,6 +280,65 @@ public class ProfileFragment extends Fragment {
                 }
             });
 
+        }
+        else if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+            Log.d("Register Activity", "Une photo a été sélectionnée");
+
+            pp = data.getData();
+
+            avatar.setImageURI(null);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), pp);
+                //      Picasso.get().load(getImageUri(getApplicationContext(), bitmap)).into(profile_picture_btn);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap();
+
+            avatar.setImageBitmap(bitmap);
+
+            String filename = UUID.randomUUID().toString();
+            final StorageReference riversRef = FirebaseStorage.getInstance().getReference("/images/" + filename);
+            UploadTask uploadTask = riversRef.putFile(pp);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return riversRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        Log.d("image", downloadUri.toString());
+
+                        String uid = FirebaseAuth.getInstance().getUid();
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                        DatabaseReference usersRef = ref.child(uid + "/account");
+                        user.setProfileImage(downloadUri.toString());
+                        usersRef.setValue(user);
+                        Toast.makeText(getContext(), "Votre photo a été modifée avec succès.", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        // Handle failures
+                        // ...
+                        Toast.makeText(getContext(), "L'upload a échoué", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
+//                profile_picture_btn.alpha = 0f
+
+//            val bitmapDrawable = BitmapDrawable(bitmap)
+//            profile_picture_btn.setBackgroundDrawable(bitmapDrawable)
         }
     }
 

@@ -45,6 +45,7 @@ import fr.tchatat.gotoesig.Inscription;
 import fr.tchatat.gotoesig.LoginActivity;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.TrajetAdapter;
+import fr.tchatat.gotoesig.models.GlobalTrajet;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
 import fr.tchatat.gotoesig.models.User;
@@ -75,7 +76,7 @@ public class RechercheTrajetFragment extends Fragment  {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
-                    final Trajet t = trajet.getValue(Trajet.class);
+                    final Trajet t = trajet.child("trajet").getValue(Trajet.class);
                     if (t.getAdresse().contains(adress.toLowerCase())) {
                         Query userQuery = databaseRef.child("users/"+t.getUid()+"/account");
                         userQuery.addValueEventListener(new ValueEventListener() {
