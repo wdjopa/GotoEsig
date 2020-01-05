@@ -203,7 +203,7 @@ public class HomeFragment extends Fragment {
         trajetsQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                results.clear();
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
                     final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));

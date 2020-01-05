@@ -81,12 +81,7 @@ public class RechercheTrajetFragment extends Fragment  {
         trajetsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                /*results = new ArrayList<>();
-                Log.d("clear", results.toString());
-                resultats.scrollToPosition(results.size());
-                resultatsAdapter.notifyItemInserted(results.size());
-                resultatsAdapter.notifyDataSetChanged();*/
-                clearer();
+
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
                     final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
@@ -97,7 +92,8 @@ public class RechercheTrajetFragment extends Fragment  {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 User u = dataSnapshot.getValue(User.class);
-                                clearer();
+
+
                                 Log.d("tezt", "sdfg");
 
                                 String dtStart = t.getDate()+"T"+t.getHeure()+"Z";
