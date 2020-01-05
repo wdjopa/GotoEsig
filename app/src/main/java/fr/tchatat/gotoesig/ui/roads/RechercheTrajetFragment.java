@@ -78,7 +78,6 @@ public class RechercheTrajetFragment extends Fragment  {
     private void search(final String adress, String date){
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         Query trajetsQuery = databaseRef.child("trajets");
-        results.clear();
         if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("date").equalTo(date);
         dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true,true);
         dialog.show();
@@ -88,6 +87,11 @@ public class RechercheTrajetFragment extends Fragment  {
         trajetsQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                results = new ArrayList<>();
+                Log.d("clear", results.toString());
+                resultats.scrollToPosition(results.size());
+                resultatsAdapter.notifyItemInserted(results.size());
+                resultatsAdapter.notifyDataSetChanged();
 
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
@@ -95,7 +99,7 @@ public class RechercheTrajetFragment extends Fragment  {
 
                     if (stripAccents(t.getAdresse()).contains(stripAccents(adress.toLowerCase()))) {
                         Query userQuery = databaseRef.child("users/"+t.getUid()+"/account");
-                        userQuery.addValueEventListener(new ValueEventListener() {
+                        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 User u = dataSnapshot.getValue(User.class);

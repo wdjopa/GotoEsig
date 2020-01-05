@@ -46,6 +46,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle("Message")
+                .setSmallIcon(R.drawable.logo)
                 .setContentText(remoteMessage.getNotification().getBody())
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);

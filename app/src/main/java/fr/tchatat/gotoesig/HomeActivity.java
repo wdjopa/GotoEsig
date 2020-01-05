@@ -71,9 +71,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
         Log.d("userHome", user.getPseudo());
+
 
 
 //        TextView nomPrenom = findViewById(R.id.nomPrenom);

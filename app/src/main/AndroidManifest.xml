@@ -60,7 +60,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <service android:name=".FirebaseMessagingService">
+        <service android:name=".FirebaseMsgService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

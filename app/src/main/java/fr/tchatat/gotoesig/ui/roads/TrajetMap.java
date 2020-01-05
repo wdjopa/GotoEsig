@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -49,6 +50,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 
+import fr.tchatat.gotoesig.Global;
+import fr.tchatat.gotoesig.HomeActivity;
 import fr.tchatat.gotoesig.HttpConnection;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.Notification;
@@ -73,12 +76,12 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
     private Trajet t;
 
     private Button btnVal;
-
+    private Global vars;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trajet_map);
-
+        vars = (Global) getApplicationContext();
         place2 = new MarkerOptions().position(ESIGELEC).title("ESIGELEC");
 
         btnVal = findViewById(R.id.btnValCarte);
@@ -175,14 +178,18 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                     URL url = new URL(urlAdress);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Authorization", "key=AAAA5xkRVmY:APA91bF6tcje2BmxKiGu230DeLOEd-MZT4LqIe3dQqf6Hj4msUeL3vLxGy475Uom8Ltt3yiymyPCMDghkF5L_O6WmrnflpgnygEKUyWAbDEjeH-IkUJvmmHrv2l89BjUWcXsr-dKjDEP");
                     conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
                     conn.setRequestProperty("Accept","application/json");
                     conn.setDoOutput(true);
                     conn.setDoInput(true);
 
                     JSONObject jsonParam = new JSONObject();
+                    JSONObject jsonParam2 = new JSONObject();
+                    jsonParam2.put("title","Réservation - GotoESIG");
+                    jsonParam2.put("body","Votre trajet du "+tCard.getTrajet().getDate()+" a été réservé par "+vars.getUser().getPseudo());
                     jsonParam.put("to", token);
-                    jsonParam.put("notification", new Gson().toJson(new Notification("Réservation - GotoESIG","Votre trajet du "+tCard.getTrajet().getDate()+"a été réservé par "+tCard.getUser().getPseudo())));
+                    jsonParam.put("notification", jsonParam2);
 
                     Log.i("JSON", jsonParam.toString());
                     DataOutputStream os = new DataOutputStream(conn.getOutputStream());
@@ -196,6 +203,10 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                     Log.i("MSG" , conn.getResponseMessage());
 
                     conn.disconnect();
+                    Intent intent = new Intent(TrajetMap.this, HomeActivity.class);
+                    intent.putExtra("user", vars.getUser());
+                    startActivity(intent);
+                    finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
