@@ -13,7 +13,7 @@
         android:layout_marginBottom="50sp"
         android:background="@color/back"
         android:paddingBottom="50sp"
-        tools:context=".LoginActivity">
+        tools:context=".authentification.LoginActivity">
 
         <ImageView
             android:id="@+id/imageView"

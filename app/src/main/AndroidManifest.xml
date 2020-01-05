@@ -12,14 +12,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".Global"
+        android:name=".tools.Global"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EvaluerTrajetActivity"></activity>
+        <activity android:name=".views.EvaluerTrajetActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,10 +33,10 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".ui.roads.TrajetMap"
+            android:name=".views.fragments.trajets.TrajetMap"
             android:label="@string/title_activity_trajet_map" />
         <activity
-            android:name=".LauncherActivity"
+            android:name=".views.LauncherActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,23 +44,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.profile.profile.UpdateProfileActivity" />
+        <activity android:name=".views.fragments.profile.profile.UpdateProfileActivity" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".views.HomeActivity"
             android:label="@string/title_activity_drawer"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".Inscription"
+            android:name=".authentification.Inscription"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".authentification.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <service android:name=".FirebaseMsgService">
+        <service android:name=".tools.FirebaseMsgService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.roads.TrajetMap"
+    tools:context=".views.fragments.trajets.TrajetMap"
     android:background="@color/back"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -27,7 +27,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.roads.TrajetMap"
+        tools:context=".views.fragments.trajets.TrajetMap"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-156dp" />
 
