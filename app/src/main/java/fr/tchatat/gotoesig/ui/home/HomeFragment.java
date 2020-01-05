@@ -1,5 +1,6 @@
 package fr.tchatat.gotoesig.ui.home;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,8 +71,9 @@ public class HomeFragment extends Fragment {
     private TrajetAdapter.onClickInterface onclickInterface;
     private Handler handler;
     private ProgressDialog dialog;
-
+    private View root=null;
     Global vars;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -79,12 +81,13 @@ public class HomeFragment extends Fragment {
 
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home_2, container, false);
+        root = inflater.inflate(R.layout.fragment_home_2, container, false);
         getActivity().setTitle("Accueil");
 
 
 
         searchView = root.findViewById(R.id.searchView);
+        searchView.requestFocus();
 //        etDate = root.findViewById(R.id.etDateSearch);
         resultats = root.findViewById(R.id.resultatsRecherche);
 

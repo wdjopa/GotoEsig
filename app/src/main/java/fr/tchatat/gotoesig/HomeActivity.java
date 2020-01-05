@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -25,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -40,6 +44,8 @@ import fr.tchatat.gotoesig.models.AvisTrajet;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.User;
 import fr.tchatat.gotoesig.models.UserTrajet;
+import fr.tchatat.gotoesig.ui.home.HomeFragment;
+import fr.tchatat.gotoesig.ui.profile.profile.ProfileFragment;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -82,7 +88,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //        nomPrenom.setText(user.getPseudo());
         // ((TextView)findViewById(R.id.pointsHeader)).setText(user.getScore()+" pt(s)");
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -98,6 +104,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navScore.setText(vars.note + " pts");
         calculate();
 
+        CircularImageView profilePicture = headerView.findViewById(R.id.profilePicture);
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new ProfileFragment();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
+                fragmentTransaction.addToBackStack(null);
+                getFragmentManager().popBackStack();
+                fragmentTransaction.commit();
+                drawer.closeDrawers();
+            }
+        });
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_add_road, R.id.nav_my_roads, R.id.nav_chercher_trajet,
@@ -150,16 +170,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                         }
                                     }
                                     dialog.dismiss();
-
                                 }
                                 else{
                                     dialog.dismiss();
-
                                 }
-
-
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 // Getting Post failed, log a message

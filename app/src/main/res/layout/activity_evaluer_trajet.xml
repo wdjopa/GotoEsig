@@ -338,15 +338,34 @@
                 android:inputType="textMultiLine"
                 android:padding="10dp" />
 
-            <Button
-                android:id="@+id/button_envoyer_avis"
-                android:layout_width="168dp"
-                android:layout_height="43dp"
-                android:layout_marginTop="28dp"
-                android:background="@drawable/rounded_blue"
-                android:fontFamily="@font/lato"
-                android:text="Enregistrer"
-                android:textColor="@color/white" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_envoyer_avis"
+                    android:layout_width="170dp"
+                    android:layout_height="43dp"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/rounded_blue"
+                    android:fontFamily="@font/lato"
+                    android:text="Enregistrer"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/button_envoyer_avis2"
+                    android:layout_width="170dp"
+                    android:layout_height="43dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="28dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded"
+                    android:fontFamily="@font/lato"
+                    android:text="Voir les avis"
+                    android:textColor="@color/white" />
+            </LinearLayout>
 
         </LinearLayout>
 

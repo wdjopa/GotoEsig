@@ -169,6 +169,7 @@ public class NouveauTrajetFragment extends Fragment {
                                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                         fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
                                         fragmentTransaction.addToBackStack(null);
+                                        getActivity().getFragmentManager().popBackStack();
                                         fragmentTransaction.commit();
 
                                         Toast.makeText(getActivity(), "Trajet créé avec succès !", Toast.LENGTH_SHORT).show();

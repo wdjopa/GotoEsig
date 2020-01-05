@@ -74,7 +74,12 @@ public class RechercheTrajetFragment extends Fragment  {
         s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return s;
     }
-
+    public void clearer() {
+        int size = results.size();
+        results.clear();
+        Log.d("resultat", ""+size+"-"+results.toString());
+        resultatsAdapter.notifyItemRangeRemoved(0, size);
+    }
     private void search(final String adress, String date){
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         Query trajetsQuery = databaseRef.child("trajets");
@@ -82,17 +87,16 @@ public class RechercheTrajetFragment extends Fragment  {
         dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true,true);
         dialog.show();
         handler = new Handler();
-        handler.postDelayed(new Runnable() {public void run() {                                dialog.dismiss();
-        }}, 3000);
-        trajetsQuery.addValueEventListener(new ValueEventListener() {
+        handler.postDelayed(new Runnable() {public void run() {dialog.dismiss();}}, 3000);
+        trajetsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                results = new ArrayList<>();
+                /*results = new ArrayList<>();
                 Log.d("clear", results.toString());
                 resultats.scrollToPosition(results.size());
                 resultatsAdapter.notifyItemInserted(results.size());
-                resultatsAdapter.notifyDataSetChanged();
-
+                resultatsAdapter.notifyDataSetChanged();*/
+                clearer();
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
                     final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
@@ -103,6 +107,8 @@ public class RechercheTrajetFragment extends Fragment  {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 User u = dataSnapshot.getValue(User.class);
+                                clearer();
+                                Log.d("tezt", "sdfg");
 
                                 String dtStart = t.getDate()+"T"+t.getHeure()+"Z";
                                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");

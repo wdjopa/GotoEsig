@@ -36,10 +36,10 @@
         android:id="@+id/nombre_avis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="48dp"
         android:layout_marginTop="40dp"
         android:fontFamily="@font/lato"
-        android:text="NOTE MOYENNE (250 Avis)"
+        android:text="NOTE MOYENNE (0 Avis)"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/montant_percu" />
@@ -74,6 +74,7 @@
         android:id="@+id/note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:isIndicator="false"
         android:layout_marginTop="28dp"
         app:layout_constraintStart_toStartOf="@+id/nombre_avis"
         app:layout_constraintTop_toBottomOf="@+id/nombre_avis" />

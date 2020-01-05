@@ -54,7 +54,6 @@ import fr.tchatat.gotoesig.Global;
 import fr.tchatat.gotoesig.HomeActivity;
 import fr.tchatat.gotoesig.HttpConnection;
 import fr.tchatat.gotoesig.R;
-import fr.tchatat.gotoesig.models.Notification;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
 import fr.tchatat.gotoesig.models.User;

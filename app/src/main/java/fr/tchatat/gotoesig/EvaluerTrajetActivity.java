@@ -83,7 +83,12 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.myroads_current_departure_places_1_avis)).setText(trajet.getNombre()+"/"+places+" Place"+(places>1?"s":""));
         ((TextView) findViewById(R.id.myroads_current_departure_username_1_avis)).setText(trajet.getUser().getPseudo());
 
-
+        findViewById(R.id.button_envoyer_avis).setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  afficherListe();
+              }
+          });
         findViewById(R.id.button_envoyer_avis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,7 +127,6 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
         ValueEventListener avisListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(vars, "cest bio", Toast.LENGTH_SHORT).show();
                 int as= 0;
                 float rating = 0;
                 for (DataSnapshot lesAvis : dataSnapshot.getChildren()) {
@@ -130,7 +134,7 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
 
                     AvisTrajet a = lesAvis.getValue(AvisTrajet.class);
                     if(a != null){
-                        Toast.makeText(vars, "cest bio "+as++, Toast.LENGTH_SHORT).show();
+                        as++;
 
                         /* SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
                         try {
