@@ -63,16 +63,19 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
         avisRecycle.setLayoutManager(new LinearLayoutManager(this));
         avisRecycle.setAdapter(avisAdapter);
 
-       if(check){
+        if(check){
             (findViewById(R.id.ratings_layout)).setVisibility(View.GONE);
             (findViewById(R.id.rating_layout)).setVisibility(View.VISIBLE);
         }
         else{
 
-           afficherListe();
-       }
-
-        Picasso.get().load(trajet.getUser().getProfileImage()).into(((ImageView) findViewById(R.id.avatar_user_1_avis)));
+            afficherListe();
+        }
+        String imageUrl = trajet.getUser().getProfileImage();
+        if(imageUrl.equals("")){
+            imageUrl =  "drawable://" + R.drawable.user;
+        }
+        Picasso.get().load(imageUrl).into(((ImageView) findViewById(R.id.avatar_user_1_avis)));
         ((TextView) findViewById(R.id.myroads_current_departure_location_1_avis)).setText(trajet.getTrajet().getAdresse());
         ((TextView) findViewById(R.id.myroads_current_departure_date_1_avis)).setText(trajet.getTrajet().getDate()+" "+trajet.getTrajet().getHeure());
         ((TextView) findViewById(R.id.myroads_current_departure_mode_1_avis)).setText(trajet.getTrajet().getMoyen());
@@ -83,27 +86,35 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.myroads_current_departure_places_1_avis)).setText(trajet.getNombre()+"/"+places+" Place"+(places>1?"s":""));
         ((TextView) findViewById(R.id.myroads_current_departure_username_1_avis)).setText(trajet.getUser().getPseudo());
 
-        findViewById(R.id.button_envoyer_avis).setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  afficherListe();
-              }
-          });
+        findViewById(R.id.button_envoyer_avis2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(vars, "Liste des avis", Toast.LENGTH_SHORT).show();
+                afficherListe();
+            }
+        });
         findViewById(R.id.button_envoyer_avis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String message = ((EditText) findViewById(R.id.avis_message)).getText().toString();
+                float rate = ((RatingBar)findViewById(R.id.ratingBar_avis)).getRating();
+                if(rate>0){
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets/"+trajet.getTrajet().getId() + "/avis/");
+                    DatabaseReference aRef = ref.child(ref.push().getKey());
+                    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'à' hh:mm");
 
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets/"+trajet.getTrajet().getId() + "/avis/");
-                DatabaseReference aRef = ref.child(ref.push().getKey());
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'à' hh:mm");
-
-                String dateString = format.format( new Date()   );
-                AvisTrajet avis = new AvisTrajet(((EditText) findViewById(R.id.avis_message)).getText().toString(), dateString,((RatingBar)findViewById(R.id.ratingBar_avis)).getRating(), vars.getUser());
-                aRef.setValue(avis);
-                afficherListe();
-                ((EditText) findViewById(R.id.avis_message)).setText("");
-                Toast.makeText(EvaluerTrajetActivity.this, "Avis enregistré", Toast.LENGTH_SHORT).show();
+                    String dateString = format.format( new Date()   );
+                    AvisTrajet avis = new AvisTrajet(message, dateString, rate, vars.getUser());
+                    aRef.setValue(avis);
+                    afficherListe();
+                    ((EditText) findViewById(R.id.avis_message)).setText("");
+                    Toast.makeText(EvaluerTrajetActivity.this, "Avis enregistré", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(EvaluerTrajetActivity.this, "Laissez au moins un avis", Toast.LENGTH_SHORT).show();
+                }
             }
+
         });
 
 
