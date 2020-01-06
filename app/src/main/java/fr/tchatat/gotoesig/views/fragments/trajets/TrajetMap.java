@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -73,8 +74,9 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trajet_map);
         vars = (Global) getApplicationContext();
+        this.setTitle("Evaluer un trajet");
+
         place2 = new MarkerOptions().position(ESIGELEC).title("ESIGELEC");
 
         btnVal = findViewById(R.id.btnValCarte);

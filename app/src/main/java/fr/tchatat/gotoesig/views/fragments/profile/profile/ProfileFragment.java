@@ -38,8 +38,11 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -50,6 +53,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import fr.tchatat.gotoesig.models.AvisTrajet;
+import fr.tchatat.gotoesig.models.Trajet;
+import fr.tchatat.gotoesig.models.UserTrajet;
 import fr.tchatat.gotoesig.tools.Global;
 import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.User;
@@ -67,6 +73,8 @@ public class ProfileFragment extends Fragment {
     private Uri pp = null;
     private Global vars;
 
+    float  noter=0;
+    int parmoi=0;
     TextView pseudo ;
     TextView tel ;
     TextView location ;
@@ -102,7 +110,11 @@ public class ProfileFragment extends Fragment {
             }
         });
         if (user.getProfileImage() != null && !user.getProfileImage().equals("")) {
-            Picasso.get().load(user.getProfileImage()).into(avatar);
+            String imageUrl = user.getProfileImage();
+            if(imageUrl.equals("")){
+                imageUrl =  "drawable://" + R.drawable.user;
+            }
+            Picasso.get().load(imageUrl).into(avatar);
         }
    /*     avatar.setImageURI(null);
         avatar.setImageURI(Uri.parse(user.getProfileImage()));*/
@@ -149,6 +161,70 @@ public class ProfileFragment extends Fragment {
                 requestPermissions(new String[]{ACCESS_FINE_LOCATION}, 100);
             }
         }
+
+
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot: dataSnapshot.getChildren())
+                {
+
+                    UserTrajet userTrajet = new UserTrajet();
+                    userTrajet.setId(snapshot.child("id").getValue().toString());
+                    if(userTrajet.getId() != null){
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/trajets");
+                        DatabaseReference trajetRef = ref.child(userTrajet.getId());
+
+                        ValueEventListener userListener = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Trajet trajet = dataSnapshot.child("trajet").getValue(Trajet.class);
+                                if(trajet != null){
+                                    for (DataSnapshot lesAvis : dataSnapshot.child("avis").getChildren()) {
+                                        AvisTrajet avis = lesAvis.getValue(AvisTrajet.class);
+
+                                    //    Toast.makeText(vars, trajet.getUid()+"---"+vars.getUser().getUid(), Toast.LENGTH_SHORT).show();
+                                        if(avis != null && trajet.getUid().equals(vars.getUser().getUid())) {
+                                            noter+=avis.getNote();
+                                            parmoi++;
+
+                                            note.setRating(noter/parmoi);
+
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Getting Post failed, log a message
+                                Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+                                // ...
+                            }
+                        };
+                        trajetRef.addValueEventListener(userListener);
+
+                    }
+                    else{
+                        Toast.makeText(vars, "Aucun trajet pour cet utilisateur", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+        DatabaseReference usersRef = ref.child(vars.getUser().getUid()+ "/trajets");
+        usersRef.addValueEventListener(userListener);
+
 
 
         profileViewModel.getText().observe(this, new Observer<String>() {
@@ -249,7 +325,11 @@ public class ProfileFragment extends Fragment {
             user = data.getParcelableExtra("user");
             ImageView avatar = root.findViewById(R.id.avatar);
             if (user.getProfileImage() != null && !user.getProfileImage().equals("")) {
-                Picasso.get().load(user.getProfileImage()).into(avatar);
+                String imageUrl = user.getProfileImage();
+                if(imageUrl.equals("")){
+                    imageUrl =  "drawable://" + R.drawable.user;
+                }
+                Picasso.get().load(imageUrl).into(avatar);
             }
    /*     avatar.setImageURI(null);
         avatar.setImageURI(Uri.parse(user.getProfileImage()));*/
@@ -266,6 +346,12 @@ public class ProfileFragment extends Fragment {
                         //                                          int[] grantResults)
                         // to handle the case where the user grants the permission. See the documentation
                         // for Activity#requestPermissions for more details.
+                        String mPhoneNumber = tMgr.getLine1Number();
+                        user.setTel(mPhoneNumber);
+                        String uid = FirebaseAuth.getInstance().getUid();
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");
+                        DatabaseReference usersRef = ref.child(uid + "/account");
+                        usersRef.setValue(user);
                         return;
                     }
                 }
@@ -286,6 +372,8 @@ public class ProfileFragment extends Fragment {
                 pseudo.setText(user.getPseudo());
                 tel.setText(user.getTel());
                 location.setText(user.getAdresse());
+                    note.setRating(vars.note/vars.parmoi);
+
 //                avatar.setImageURI(Uri.parse("https://firebasestorage.googleapis.com/v0/b/gotoesig-50c46.appspot.com/o/images%2F53326439-e77d-41cc-81b6-ace6bf45612f?alt=media&token=f6e89453-36a6-4488-aeb7-a3e9b5331247"));
                 }
             });

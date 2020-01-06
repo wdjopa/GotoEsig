@@ -73,7 +73,7 @@ public class RechercheTrajetFragment extends Fragment  {
     private void search(final String adress, String date){
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         Query trajetsQuery = databaseRef.child("trajets");
-        if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("date").equalTo(date);
+        if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("trajet/date").equalTo(date);
         dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true,true);
         dialog.show();
         handler = new Handler();
@@ -81,7 +81,7 @@ public class RechercheTrajetFragment extends Fragment  {
         trajetsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                results.clear();
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
                     final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
@@ -124,6 +124,9 @@ public class RechercheTrajetFragment extends Fragment  {
                         });
                     }
                     else{
+                        resultats.scrollToPosition(results.size());
+                        resultatsAdapter.notifyItemInserted(results.size());
+                        resultatsAdapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 }

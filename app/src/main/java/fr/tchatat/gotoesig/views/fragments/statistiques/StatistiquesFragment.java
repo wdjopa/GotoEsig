@@ -66,7 +66,7 @@ public class StatistiquesFragment extends Fragment {
                                     for (DataSnapshot lesAvis : dataSnapshot.child("avis").getChildren()) {
                                         AvisTrajet avis = lesAvis.getValue(AvisTrajet.class);
 
-                                        Toast.makeText(vars, trajet.getUid()+"---"+vars.getUser().getUid(), Toast.LENGTH_SHORT).show();
+                                       // Toast.makeText(vars, trajet.getUid()+"---"+vars.getUser().getUid(), Toast.LENGTH_SHORT).show();
                                         if(avis != null && trajet.getUid().equals(vars.getUser().getUid())) {
                                             note+=avis.getNote();
                                             parmoi++;

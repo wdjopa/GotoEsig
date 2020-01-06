@@ -46,7 +46,11 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetAdapter.TrajetHold
     @Override
     public void onBindViewHolder(@NonNull TrajetHolder holder, final int position) {
 //        holder.bind(trajets.get(position), listener);
-        Picasso.get().load(Uri.parse(trajets.get(position).getUser().getProfileImage())).into(holder.avatar);
+        String imageUrl =trajets.get(position).getUser().getProfileImage();
+        if(imageUrl.equals("")){
+            imageUrl =  "drawable://" + R.drawable.user;
+        }
+        Picasso.get().load(imageUrl).into(holder.avatar);
         holder.proposer.setText(trajets.get(position).getUser().getPseudo());
         holder.depart.setText(trajets.get(position).getTrajet().getAdresse().toUpperCase());
         holder.date.setText(trajets.get(position).getTrajet().getDate()+" "+trajets.get(position).getTrajet().getHeure());

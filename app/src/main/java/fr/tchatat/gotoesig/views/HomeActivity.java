@@ -100,7 +100,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navScore = headerView.findViewById(R.id.pointsHeader);
         ImageView imageAvatar = headerView.findViewById(R.id.profilePicture);
         if(user.getProfileImage() != null && !user.getProfileImage().equals("")){
-            Picasso.get().load(user.getProfileImage()).into(imageAvatar);
+            String imageUrl = user.getProfileImage();
+            if(imageUrl.equals("")){
+                imageUrl =  "drawable://" + R.drawable.user;
+            }
+            Picasso.get().load(imageUrl).into(imageAvatar);
         }
         navUsername.setText(user.getPseudo());
         navScore.setText(vars.note + " pts");
@@ -161,6 +165,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 Trajet trajet = dataSnapshot.child("trajet").getValue(Trajet.class);
                                 if(trajet != null){
                                     vars.montant+=trajet.getContribution();
+                                    vars.note=0;
+                                    vars.parmoi=0;
                                     for (DataSnapshot lesAvis : dataSnapshot.child("avis").getChildren()) {
                                         AvisTrajet avis = lesAvis.getValue(AvisTrajet.class);
 

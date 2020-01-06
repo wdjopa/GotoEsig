@@ -10,8 +10,8 @@
 
     <Button
         android:id="@+id/btnValCarte"
-        android:layout_width="350dp"
-        android:layout_height="70dp"
+        android:layout_width="332dp"
+        android:layout_height="64dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/rounded_blue"
         android:text="CONFIRMER"
