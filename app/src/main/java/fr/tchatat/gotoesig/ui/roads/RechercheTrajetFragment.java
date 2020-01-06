@@ -2,22 +2,17 @@ package fr.tchatat.gotoesig.ui.roads;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,23 +29,21 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import fr.tchatat.gotoesig.Global;
-import fr.tchatat.gotoesig.Inscription;
-import fr.tchatat.gotoesig.LoginActivity;
-import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.TrajetAdapter;
-import fr.tchatat.gotoesig.models.GlobalTrajet;
+import fr.tchatat.gotoesig.R;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
 import fr.tchatat.gotoesig.models.User;
+import fr.tchatat.gotoesig.ui.roads.RechercherTrajetViewModel;
+import fr.tchatat.gotoesig.ui.roads.TrajetMap;
+
 import java.text.Normalizer;
 
 public class RechercheTrajetFragment extends Fragment  {
@@ -83,7 +76,7 @@ public class RechercheTrajetFragment extends Fragment  {
     private void search(final String adress, String date){
         final DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         Query trajetsQuery = databaseRef.child("trajets");
-        if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("date").equalTo(date);
+        if (!date.matches("")) trajetsQuery = trajetsQuery.orderByChild("trajet/date").equalTo(date);
         dialog = ProgressDialog.show(getActivity(), "","Recherche ..." , true,true);
         dialog.show();
         handler = new Handler();
@@ -91,12 +84,7 @@ public class RechercheTrajetFragment extends Fragment  {
         trajetsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                /*results = new ArrayList<>();
-                Log.d("clear", results.toString());
-                resultats.scrollToPosition(results.size());
-                resultatsAdapter.notifyItemInserted(results.size());
-                resultatsAdapter.notifyDataSetChanged();*/
-                clearer();
+                results.clear();
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
                     final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
@@ -107,7 +95,8 @@ public class RechercheTrajetFragment extends Fragment  {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 User u = dataSnapshot.getValue(User.class);
-                                clearer();
+
+
                                 Log.d("tezt", "sdfg");
 
                                 String dtStart = t.getDate()+"T"+t.getHeure()+"Z";
@@ -138,6 +127,9 @@ public class RechercheTrajetFragment extends Fragment  {
                         });
                     }
                     else{
+                        resultats.scrollToPosition(results.size());
+                        resultatsAdapter.notifyItemInserted(results.size());
+                        resultatsAdapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
                 }
