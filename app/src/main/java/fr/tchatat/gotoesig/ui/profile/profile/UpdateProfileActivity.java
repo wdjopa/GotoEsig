@@ -65,7 +65,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         profile_picture_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("Page d'inscription", "Selection de photo");
+              //  Log.d("Page d'inscription", "Selection de photo");
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, 0);
@@ -108,13 +108,13 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         // Picasso.get().load(user.getProfileImage()).into(profile_picture_btn);
                     }
 
-                    Log.d("userStart", new Gson().toJson(user));
+                //    Log.d("userStart", new Gson().toJson(user));
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Getting Post failed, log a message
-                    Log.w("Update", "loadUser:onCancelled", databaseError.toException());
+                  //  Log.w("Update", "loadUser:onCancelled", databaseError.toException());
                     // ...
                 }
             };
@@ -176,7 +176,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUri = task.getResult();
-                    Log.d("image", downloadUri.toString());
+                 //   Log.d("image", downloadUri.toString());
                     saveOther(downloadUri);
                 } else {
                     // Handle failures
@@ -225,7 +225,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
 
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-            Log.d("Register Activity", "Une photo a été sélectionnée");
+           // Log.d("Register Activity", "Une photo a été sélectionnée");
 
             pp = data.getData();
 

@@ -216,7 +216,7 @@ public class HomeFragment extends Fragment {
         trajetsQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                results.clear();
                 for (DataSnapshot trajet : dataSnapshot.getChildren()) {
                     final Trajet t = trajet.child("trajet").getValue(Trajet.class);
                     final int nombre = Integer.parseInt(String.valueOf(trajet.child("participants").getChildrenCount()));
@@ -239,8 +239,8 @@ public class HomeFragment extends Fragment {
 
                                 if(!(new Date().after(date))){
                                     results.add(new TrajetCard(u, t, nombre));
-                                    Log.d("result", adress);
-                                    Log.d("result", new Gson().toJson(results));
+                              //      Log.d("result", adress);
+                              //      Log.d("result", new Gson().toJson(results));
                                     resultats.scrollToPosition(results.size());
                                     resultatsAdapter.notifyItemInserted(results.size());
                                     resultatsAdapter.notifyDataSetChanged();

@@ -45,7 +45,7 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetAdapter.TrajetHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TrajetHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final TrajetHolder holder, final int position) {
 //        holder.bind(trajets.get(position), listener);
         Picasso.get().load(Uri.parse(trajets.get(position).getUser().getProfileImage())).into(holder.avatar);
         holder.proposer.setText(trajets.get(position).getUser().getPseudo());
@@ -59,7 +59,9 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetAdapter.TrajetHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.cardView.setEnabled(false);
                 onClickInterface.onItemClick(trajets.get(position));
+                holder.cardView.setEnabled(true);
             }
         });
     }

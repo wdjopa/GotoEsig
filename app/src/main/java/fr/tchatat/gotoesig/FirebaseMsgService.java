@@ -24,7 +24,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token){
         super.onNewToken(token);
-        Log.e("refreshedToken", token);
+      //  Log.e("refreshedToken", token);
         final String uid = FirebaseAuth.getInstance().getUid();
         DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("/users/"+uid+"/token");
         tokenRef.setValue(token);
@@ -35,7 +35,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         int id = (int) System.currentTimeMillis();
 
-        Log.d("Msg", "Message received ["+remoteMessage+"]");
+     //   Log.d("Msg", "Message received ["+remoteMessage+"]");
 
         // Create Notification
         Intent intent = new Intent(this, MesTrajetsFragment.class);

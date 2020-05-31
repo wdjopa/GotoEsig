@@ -125,7 +125,7 @@ public class StatistiquesFragment extends Fragment {
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 // Getting Post failed, log a message
-                                Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+            //                    Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
                                 // ...
                             }
                         };
@@ -143,7 +143,7 @@ public class StatistiquesFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
+        //        Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
                 // ...
             }
         };

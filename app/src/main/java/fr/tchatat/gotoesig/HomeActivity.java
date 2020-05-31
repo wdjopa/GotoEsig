@@ -70,7 +70,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String updatedToken = instanceIdResult.getToken();
-                Log.e("Updated Token",updatedToken);
+              //  Log.e("Updated Token",updatedToken);
                 final String uid = FirebaseAuth.getInstance().getUid();
                 DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("/users/"+uid+"/token");
                 tokenRef.setValue(updatedToken);
@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         Intent intent = getIntent();
         user = intent.getParcelableExtra("user");
-        Log.d("userHome", user.getPseudo());
+      //  Log.d("userHome", user.getPseudo());
 
 
 
@@ -104,10 +104,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navScore.setText(vars.note + " pts");
         calculate();
 
-        CircularImageView profilePicture = headerView.findViewById(R.id.profilePicture);
+        final CircularImageView profilePicture = headerView.findViewById(R.id.profilePicture);
         profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                profilePicture.setEnabled(false);
                 Fragment fragment = new ProfileFragment();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -116,6 +117,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 getFragmentManager().popBackStack();
                 fragmentTransaction.commit();
                 drawer.closeDrawers();
+                profilePicture.setEnabled(true);
+
             }
         });
 
@@ -178,7 +181,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 // Getting Post failed, log a message
-                                Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+                //                Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
                                 dialog.dismiss();
 
                                 // ...
@@ -199,7 +202,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
+          //      Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
                 dialog.dismiss();
 
                 // ...
@@ -250,7 +253,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        Log.w("test", id + "");
+      //  Log.w("test", id + "");
 
         return true;
     }

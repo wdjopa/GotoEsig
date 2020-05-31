@@ -70,7 +70,7 @@ public class RechercheTrajetFragment extends Fragment  {
     public void clearer() {
         int size = results.size();
         results.clear();
-        Log.d("resultat", ""+size+"-"+results.toString());
+      //  Log.d("resultat", ""+size+"-"+results.toString());
         resultatsAdapter.notifyItemRangeRemoved(0, size);
     }
     private void search(final String adress, String date){
@@ -97,7 +97,7 @@ public class RechercheTrajetFragment extends Fragment  {
                                 User u = dataSnapshot.getValue(User.class);
 
 
-                                Log.d("tezt", "sdfg");
+           //                     Log.d("tezt", "sdfg");
 
                                 String dtStart = t.getDate()+"T"+t.getHeure()+"Z";
                                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
@@ -110,8 +110,8 @@ public class RechercheTrajetFragment extends Fragment  {
 
                                 if(!(new Date().after(date))){
                                     results.add(new TrajetCard(u, t, nombre));
-                                    Log.d("result", adress);
-                                    Log.d("result", new Gson().toJson(results));
+                            //        Log.d("result", adress);
+                            //        Log.d("result", new Gson().toJson(results));
                                     resultats.scrollToPosition(results.size());
                                     resultatsAdapter.notifyItemInserted(results.size());
                                     resultatsAdapter.notifyDataSetChanged();

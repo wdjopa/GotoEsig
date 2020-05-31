@@ -54,7 +54,7 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
         vars = (Global) getApplicationContext();
         Intent intent = getIntent();
         trajet = intent.getParcelableExtra("trajet");
-        Log.d("extract", intent.getExtras().getString("type").toString());
+     //   Log.d("extract", intent.getExtras().getString("type").toString());
         Boolean check = intent.getExtras().getString("type").equals("laisser");
 
 
@@ -89,13 +89,16 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
         findViewById(R.id.button_envoyer_avis2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                findViewById(R.id.button_envoyer_avis2).setEnabled(false);
                 Toast.makeText(vars, "Liste des avis", Toast.LENGTH_SHORT).show();
                 afficherListe();
+                findViewById(R.id.button_envoyer_avis2).setEnabled(true);
             }
         });
         findViewById(R.id.button_envoyer_avis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                findViewById(R.id.button_envoyer_avis).setEnabled(false);
                 String message = ((EditText) findViewById(R.id.avis_message)).getText().toString();
                 float rate = ((RatingBar)findViewById(R.id.ratingBar_avis)).getRating();
                 if(rate>0){
@@ -103,16 +106,15 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
                     DatabaseReference aRef = ref.child(ref.push().getKey());
                     SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy 'à' hh:mm");
 
-                    String dateString = format.format( new Date()   );
-                    AvisTrajet avis = new AvisTrajet(message, dateString, rate, vars.getUser());
-                    aRef.setValue(avis);
-                    afficherListe();
+                    findViewById(R.id.button_envoyer_avis2) = new Programs.Genres()
                     ((EditText) findViewById(R.id.avis_message)).setText("");
                     Toast.makeText(EvaluerTrajetActivity.this, "Avis enregistré", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(EvaluerTrajetActivity.this, "Laissez au moins un avis", Toast.LENGTH_SHORT).show();
                 }
+
+                findViewById(R.id.button_envoyer_avis).setEnabled(true);
             }
 
         });
@@ -141,7 +143,7 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
                 int as= 0;
                 float rating = 0;
                 for (DataSnapshot lesAvis : dataSnapshot.getChildren()) {
-                    Log.w("Liste des avis2", lesAvis.getValue().toString());
+                 //   Log.w("Liste des avis2", lesAvis.getValue().toString());
 
                     AvisTrajet a = lesAvis.getValue(AvisTrajet.class);
                     if(a != null){
@@ -155,7 +157,7 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
                         }*/
 
                         avis.add(new AvisTrajetCard(a, trajet.getTrajet(), a.getUser()));
-                        Log.w("Liste des avis2", avis.toString());
+                 //       Log.w("Liste des avis2", avis.toString());
 
                         rating+=a.getNote();
                     }
@@ -170,7 +172,7 @@ public class EvaluerTrajetActivity extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.w("Liste des avis", "loadUser:onCancelled", databaseError.toException());
+            //    Log.w("Liste des avis", "loadUser:onCancelled", databaseError.toException());
                 // ...
             }
         };

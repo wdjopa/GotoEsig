@@ -190,7 +190,7 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                     jsonParam.put("to", token);
                     jsonParam.put("notification", jsonParam2);
 
-                    Log.i("JSON", jsonParam.toString());
+                //    Log.i("JSON", jsonParam.toString());
                     DataOutputStream os = new DataOutputStream(conn.getOutputStream());
                     //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
                     os.writeBytes(jsonParam.toString());
@@ -198,8 +198,8 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                     os.flush();
                     os.close();
 
-                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                    Log.i("MSG" , conn.getResponseMessage());
+              //      Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+              //      Log.i("MSG" , conn.getResponseMessage());
 
                     conn.disconnect();
                     Intent intent = new Intent(TrajetMap.this, HomeActivity.class);
@@ -245,7 +245,7 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         String depTime = "";
         try{
             DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-            Log.d("la date", t.getDate() + " " + t.getHeure() + ":00");
+          //  Log.d("la date", t.getDate() + " " + t.getHeure() + ":00");
             Date laDate = (Date)formatter.parse(t.getDate() + " " + t.getHeure() + ":00");
             depTime = "&departure_time=" + String.valueOf(laDate.getTime());
         }catch(ParseException pe){
@@ -260,7 +260,7 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
         String url = "https://maps.googleapis.com/maps/api/directions/"
                 + output + "?" + params;
 
-        Log.d("url", url);
+     //   Log.d("url", url);
         return url;
     }
 
@@ -288,7 +288,7 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                 HttpConnection http = new HttpConnection();
                 data = http.readUrl(url[0]);
             } catch (Exception e) {
-                Log.d("Background Task", e.toString());
+        //        Log.d("Background Task", e.toString());
             }
             return data;
         }
@@ -314,7 +314,7 @@ public class TrajetMap extends FragmentActivity implements OnMapReadyCallback {
                 jObject = new JSONObject(jsonData[0]);
                 PathJSONParser parser = new PathJSONParser();
                 routes = parser.parse(jObject);
-                Log.d("routes", "routes : "+routes.toString());
+          //      Log.d("routes", "routes : "+routes.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
