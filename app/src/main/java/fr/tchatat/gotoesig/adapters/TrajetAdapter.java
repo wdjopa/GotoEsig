@@ -44,7 +44,7 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetAdapter.TrajetHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TrajetHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final TrajetHolder holder, final int position) {
 //        holder.bind(trajets.get(position), listener);
         String imageUrl =trajets.get(position).getUser().getProfileImage();
         if(imageUrl.equals("")){
@@ -62,7 +62,9 @@ public class TrajetAdapter extends RecyclerView.Adapter<TrajetAdapter.TrajetHold
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                holder.cardView.setEnabled(false);
                 onClickInterface.onItemClick(trajets.get(position));
+                holder.cardView.setEnabled(true);
             }
         });
     }

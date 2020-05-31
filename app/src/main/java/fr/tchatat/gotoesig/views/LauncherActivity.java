@@ -45,7 +45,7 @@ public class LauncherActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    Log.d("userStart", new Gson().toJson(user));
+               //     Log.d("userStart", new Gson().toJson(user));
                     vars.setUser(user);
                     updateUI(user);
                 }
@@ -53,7 +53,7 @@ public class LauncherActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Getting Post failed, log a message
-                    Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+        //            Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
                     // ...
                 }
             };

@@ -58,7 +58,10 @@ import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.UserTrajet;
 import fr.tchatat.gotoesig.tools.Global;
 import fr.tchatat.gotoesig.R;
+import fr.tchatat.gotoesig.models.AvisTrajet;
+import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.User;
+import fr.tchatat.gotoesig.models.UserTrajet;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_PHONE_NUMBERS;
@@ -118,7 +121,7 @@ public class ProfileFragment extends Fragment {
         }
    /*     avatar.setImageURI(null);
         avatar.setImageURI(Uri.parse(user.getProfileImage()));*/
-        Log.d("user", Uri.parse(user.getProfileImage()) + "");
+     //   Log.d("user", Uri.parse(user.getProfileImage()) + "");
         if (user.getTel().trim().length() == 0) {
             if (ActivityCompat.checkSelfPermission(root.getContext(),READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
 
@@ -138,7 +141,7 @@ public class ProfileFragment extends Fragment {
             }
 
         }
-        Log.e("tel", user.toString());
+     //   Log.e("tel", user.toString());
        // Toast.makeText(root.getContext(), "hors"+user.getTel(), Toast.LENGTH_SHORT).show();
         if (ActivityCompat.checkSelfPermission(root.getContext(),ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -146,11 +149,11 @@ public class ProfileFragment extends Fragment {
             if (locationManager != null) {
                 Location lastKnownLocationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if (lastKnownLocationGPS != null) {
-                    Log.d("positions", lastKnownLocationGPS.getLatitude()+" ---- "+lastKnownLocationGPS.getLongitude());
+                  //  Log.d("positions", lastKnownLocationGPS.getLatitude()+" ---- "+lastKnownLocationGPS.getLongitude());
                     getAddressFromLocation(lastKnownLocationGPS.getLatitude(), lastKnownLocationGPS.getLongitude());
                 } else {
                     Location loc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                    Log.d("positions", loc.getLatitude()+" -- "+loc.getLongitude());
+                 //   Log.d("positions", loc.getLatitude()+" -- "+loc.getLongitude());
 
                     getAddressFromLocation(loc.getLatitude(), loc.getLongitude());
                 }
@@ -199,7 +202,7 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 // Getting Post failed, log a message
-                                Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+                             //   Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
                                 // ...
                             }
                         };
@@ -217,7 +220,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
+            //    Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
                 // ...
             }
         };
@@ -277,12 +280,12 @@ public class ProfileFragment extends Fragment {
 
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d("permission", "Dedans"+Build.VERSION_CODES.M+"<>"+Build.VERSION.SDK_INT);
+           // Log.d("permission", "Dedans"+Build.VERSION_CODES.M+"<>"+Build.VERSION.SDK_INT);
 
             requestPermissions(new String[]{READ_PHONE_STATE}, 100);
         }
         else{
-            Log.d("permission", Build.VERSION_CODES.M+"<>"+Build.VERSION.SDK_INT);
+           // Log.d("permission", Build.VERSION_CODES.M+"<>"+Build.VERSION.SDK_INT);
         }
     }
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -333,7 +336,7 @@ public class ProfileFragment extends Fragment {
             }
    /*     avatar.setImageURI(null);
         avatar.setImageURI(Uri.parse(user.getProfileImage()));*/
-            Log.d("user", "On Resume : " + Uri.parse(user.getProfileImage()) + "");
+         //   Log.d("user", "On Resume : " + Uri.parse(user.getProfileImage()) + "");
             if (user.getTel().equals("")) {
 
                 TelephonyManager tMgr = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -380,7 +383,7 @@ public class ProfileFragment extends Fragment {
 
         }
         else if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-            Log.d("Register Activity", "Une photo a été sélectionnée");
+         //   Log.d("Register Activity", "Une photo a été sélectionnée");
 
             pp = data.getData();
 
@@ -416,7 +419,7 @@ public class ProfileFragment extends Fragment {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
-                        Log.d("image", downloadUri.toString());
+        //                Log.d("image", downloadUri.toString());
 
                         String uid = FirebaseAuth.getInstance().getUid();
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/users");

@@ -226,8 +226,8 @@ public class HomeFragment extends Fragment {
 
                                 if(!(new Date().after(date))){
                                     results.add(new TrajetCard(u, t, nombre));
-                                    Log.d("result", adress);
-                                    Log.d("result", new Gson().toJson(results));
+                              //      Log.d("result", adress);
+                              //      Log.d("result", new Gson().toJson(results));
                                     resultats.scrollToPosition(results.size());
                                     resultatsAdapter.notifyItemInserted(results.size());
                                     resultatsAdapter.notifyDataSetChanged();

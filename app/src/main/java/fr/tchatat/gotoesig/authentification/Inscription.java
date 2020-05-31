@@ -3,6 +3,7 @@ package fr.tchatat.gotoesig.authentification;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
     private String email = null;
     private String pseudo = null;
     private Global vars;
+    final ProgressDialog dialog = ProgressDialog.show(Inscription.this, "","Inscription en cours ..." , true);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,8 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
     }
 
     private void createAccount(final String email, String password) {
-        Log.d(TAG, "createAccount:" + email);
-
+    //    Log.d(TAG, "createAccount:" + email);
+        dialog.show();
 //        showProgressBar();
 
         // [START create_user_with_email]
@@ -56,7 +58,7 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
+               //             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(Inscription.this, "Votre compte a été créé avec succès.",
                                     Toast.LENGTH_SHORT).show();
 
@@ -68,7 +70,7 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
                             User user = new User(uid);
                             user.setEmail(email);
                             user.setPseudo(pseudo);
-                            Log.d("User", new Gson().toJson(user));
+                 //           Log.d("User", new Gson().toJson(user));
                             Map<String, User> users = new HashMap<>();
                             users.put(uid, user);
 
@@ -78,7 +80,7 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+              //              Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(Inscription.this, "Inscription échouée. Adresse email déjà utilisée",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
@@ -94,8 +96,10 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
 
     private void updateUI(User user) {
 //        hideProgressBar();
+
+        dialog.dismiss();
         if (user != null) {
-            Log.e("REUSSITE", "Inscription reussite");
+       //     Log.e("REUSSITE", "Inscription reussite");
             Intent accueil = new Intent(Inscription.this, HomeActivity.class);
             accueil.putExtra("user", user);
             startActivity(accueil);
@@ -111,10 +115,10 @@ public class Inscription extends AppCompatActivity implements   View.OnClickList
             String password = ((EditText) findViewById(R.id.etPass)).getText().toString();
             String confirm = ((EditText) findViewById(R.id.etConfirm)).getText().toString();
 
-            Log.d("champs", email);
-            Log.d("champs", pseudo);
-            Log.d("champs", password);
-            Log.d("champs", confirm);
+        //    Log.d("champs", email);
+          //  Log.d("champs", pseudo);
+          //  Log.d("champs", password);
+         //   Log.d("champs", confirm);
             if (!email.equals("") && !pseudo.equals("") && !password.equals("") && !confirm.equals("")) {
                 if (password.equals(confirm)) {
 //                    register(email, password);

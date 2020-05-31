@@ -41,6 +41,9 @@ import fr.tchatat.gotoesig.adapters.TrajetAdapter;
 import fr.tchatat.gotoesig.models.Trajet;
 import fr.tchatat.gotoesig.models.TrajetCard;
 import fr.tchatat.gotoesig.models.User;
+import fr.tchatat.gotoesig.ui.roads.RechercherTrajetViewModel;
+import fr.tchatat.gotoesig.ui.roads.TrajetMap;
+
 import java.text.Normalizer;
 
 public class RechercheTrajetFragment extends Fragment  {
@@ -67,7 +70,7 @@ public class RechercheTrajetFragment extends Fragment  {
     public void clearer() {
         int size = results.size();
         results.clear();
-        Log.d("resultat", ""+size+"-"+results.toString());
+      //  Log.d("resultat", ""+size+"-"+results.toString());
         resultatsAdapter.notifyItemRangeRemoved(0, size);
     }
     private void search(final String adress, String date){
@@ -94,7 +97,11 @@ public class RechercheTrajetFragment extends Fragment  {
                                 User u = dataSnapshot.getValue(User.class);
 
 
+<<<<<<< HEAD:app/src/main/java/fr/tchatat/gotoesig/views/fragments/trajets/RechercheTrajetFragment.java
                                 Log.d("tezt", "sdfg");
+=======
+           //                     Log.d("tezt", "sdfg");
+>>>>>>> correctifs:app/src/main/java/fr/tchatat/gotoesig/ui/roads/RechercheTrajetFragment.java
 
                                 String dtStart = t.getDate()+"T"+t.getHeure()+"Z";
                                 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy'T'HH:mm'Z'");
@@ -107,8 +114,8 @@ public class RechercheTrajetFragment extends Fragment  {
 
                                 if(!(new Date().after(date))){
                                     results.add(new TrajetCard(u, t, nombre));
-                                    Log.d("result", adress);
-                                    Log.d("result", new Gson().toJson(results));
+                            //        Log.d("result", adress);
+                            //        Log.d("result", new Gson().toJson(results));
                                     resultats.scrollToPosition(results.size());
                                     resultatsAdapter.notifyItemInserted(results.size());
                                     resultatsAdapter.notifyDataSetChanged();

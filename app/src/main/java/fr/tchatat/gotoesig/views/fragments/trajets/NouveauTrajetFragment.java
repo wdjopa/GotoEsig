@@ -110,7 +110,7 @@ public class NouveauTrajetFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("data", response.toString());
+           //             Log.d("data", response.toString());
                         try{
                             JSONArray rows = response.getJSONArray("rows");
                             JSONObject elements0 = rows.getJSONObject(0);
@@ -124,7 +124,7 @@ public class NouveauTrajetFragment extends Fragment {
 
                         }catch( JSONException je){
                             Toast.makeText(getActivity(), "Une erreur s'est produite", Toast.LENGTH_SHORT).show();
-                            Log.d("JSONException", je.getMessage());
+                   //         Log.d("JSONException", je.getMessage());
                         }
 
                         if((!dist.matches("")) && (!temps.matches(""))){
@@ -157,7 +157,7 @@ public class NouveauTrajetFragment extends Fragment {
                                         trajet.setNombre(iplaces);
                                         trajet.setTemps(temps);
                                         trajet.setRetard(iret);
-                                        Log.d("Trajet", new Gson().toJson(trajet));
+                           //             Log.d("Trajet", new Gson().toJson(trajet));
                                         Map<String, Trajet> trajets = new HashMap<>();
                                         trajets.put(id, trajet);
 
@@ -188,7 +188,7 @@ public class NouveauTrajetFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getActivity(), "Error calculatiing the distance and time. Please check your Internet connection", Toast.LENGTH_SHORT).show();
-                        Log.e("Volley", error.toString());
+                 //       Log.e("Volley", error.toString());
                     }
                 }
         );
@@ -351,7 +351,7 @@ public class NouveauTrajetFragment extends Fragment {
                         final int iret = Integer.parseInt(ret);
                         final float fcontrib = (moyenT.equals("Voiture") ? Float.parseFloat(contrib) : 0);
 
-                        Log.d("ok", "Clic");
+                       // Log.d("ok", "Clic");
 
                         popup(key, adresse, auto, fcontrib, date, heure, moyenT, iret, iplaces);
                     }catch(ParseException pe){

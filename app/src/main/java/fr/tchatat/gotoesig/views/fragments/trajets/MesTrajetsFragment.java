@@ -109,7 +109,8 @@ public class MesTrajetsFragment extends Fragment {
         ValueEventListener userListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
+                trajetsTermines.clear();
+                trajetsEnCours.clear();
                     for(DataSnapshot snapshot: dataSnapshot.getChildren())
                     {
 
@@ -136,21 +137,21 @@ public class MesTrajetsFragment extends Fragment {
                                                 try {
                                                     date = format.parse(dtStart);
                                                     if(new Date().after(date)){
-                                                        Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                                            //            Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
                                                         trajetsTermines.add(new TrajetCard(user, trajet, nombre));
                                                         listeTrajetsTermines.setVisibility(View.VISIBLE);
                                                         root.findViewById(R.id.emptyTermines).setVisibility(View.GONE);
-                                                        Log.w("Liste des trajets", trajetsTermines.toString());
+                                                        //Log.w("Liste des trajets", trajetsTermines.toString());
                                                         listeTrajetsTermines.scrollToPosition(trajetsTermines.size() );
                                                         listeTrajetsAdapterTermines.notifyItemInserted(trajetsTermines.size());
                                                         listeTrajetsAdapterTermines.notifyDataSetChanged();
                                                     }
                                                     else{
-                                                        Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
+                                                     //   Log.d("trajet de l'utilisateur", new Gson().toJson(trajet ));
                                                         trajetsEnCours.add(new TrajetCard(user, trajet, nombre));
                                                         listeTrajetsEnCours.setVisibility(View.VISIBLE);
                                                         root.findViewById(R.id.emptyEnCours).setVisibility(View.GONE);
-                                                        Log.w("Liste des trajets", trajetsEnCours.toString());
+                                                     //   Log.w("Liste des trajets", trajetsEnCours.toString());
                                                         listeTrajetsEnCours.scrollToPosition(trajetsEnCours.size() );
                                                         listeTrajetsAdapterEnCours.notifyItemInserted(trajetsEnCours.size());
                                                         listeTrajetsAdapterEnCours.notifyDataSetChanged();
@@ -165,7 +166,7 @@ public class MesTrajetsFragment extends Fragment {
                                             @Override
                                             public void onCancelled(DatabaseError databaseError) {
                                                 // Getting Post failed, log a message
-                                                Log.w("Update", "loadUser:onCancelled", databaseError.toException());
+                                             //   Log.w("Update", "loadUser:onCancelled", databaseError.toException());
                                                 // ...
                                             }
                                         };
@@ -178,7 +179,7 @@ public class MesTrajetsFragment extends Fragment {
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
                                     // Getting Post failed, log a message
-                                    Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
+                                  //  Log.w("Liste trajets", "loadUser:onCancelled", databaseError.toException());
                                     // ...
                                 }
                             };
@@ -195,7 +196,7 @@ public class MesTrajetsFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-                Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
+          //      Log.w("trajets", "loadUser:onCancelled", databaseError.toException());
                 // ...
             }
         };

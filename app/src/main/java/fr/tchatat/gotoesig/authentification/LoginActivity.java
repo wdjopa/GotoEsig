@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    Log.d("userStart", new Gson().toJson(user));
+                //    Log.d("userStart", new Gson().toJson(user));
                     vars.setUser(user);
                     updateUI(user);
                 }
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Getting Post failed, log a message
-                    Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                //    Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
                     // ...
                 }
             };
@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent register = new Intent(this, Inscription.class);
             startActivity(register);
         } else if (view == connexion) {
-            Log.d(TAG, "Connexion");
+         //   Log.d(TAG, "Connexion");
             String email = ((EditText) findViewById(R.id.etEmailConnexion)).getText().toString();
             String password = ((EditText) findViewById(R.id.etPassConnexion)).getText().toString();
 
@@ -119,8 +119,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onFailure(@NonNull Exception e) {
                             String errorCode = ((FirebaseAuthException) e).getErrorCode();
                             String errorMessage = e.getMessage();
-                            Log.d(TAG, errorCode);
-                            Log.d(TAG, errorMessage);
+                          //  Log.d(TAG, errorCode);
+                          //  Log.d(TAG, errorMessage);
                             Toast.makeText(vars, errorMessage, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
 
@@ -133,13 +133,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "signInWithEmail:success");
+                           //     Log.d(TAG, "signInWithEmail:success");
                                 String uid = FirebaseAuth.getInstance().getUid();
                                 ValueEventListener userListener = new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User user = dataSnapshot.getValue(User.class);
-                                        Log.d("userStart", new Gson().toJson(user));
+                                //        Log.d("userStart", new Gson().toJson(user));
                                         vars.setUser(user);
                                         dialog.dismiss();
                                         updateUI(user);
@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     @Override
                                     public void onCancelled(DatabaseError databaseError) {
                                         // Getting Post failed, log a message
-                                        Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                                    //    Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
                                         // ...
                                     }
                                 };
@@ -160,12 +160,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     throw task.getException();
 
                                 } catch(Exception e) {
-                                    Log.e(TAG, e.getMessage());
+                                //    Log.e(TAG, e.getMessage());
                                 }
                                 dialog.dismiss();
 
                                 // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                             //   Log.w(TAG, "signInWithEmail:failure", task.getException());
 
                                 Toast.makeText(LoginActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
